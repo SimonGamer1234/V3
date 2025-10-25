@@ -4,24 +4,41 @@ import os
 import requests
 
 
-CATHEGORIES = json.loads(os.getenv("CATHEGORIES"))
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
 
 app = Flask(__name__)
 @app.route('/api/data', methods=['POST'])
-def handle_data():
+
+def Get_Cathegories_Variable():
+    url = f'https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES'
+    headers = {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': f'Bearer {GITHUB_TOKEN}',
+            'X-GitHub-Api-Version': '2022-11-28',
+        }
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    CATHEGORIES = json.loads(data)
+    return CATHEGORIES  
+
+def handle_data(CATHEGORIES):
     data = request.get_json()
     Content = data.get('Content')
     Plan = data.get('Plan')
-    PostingsLeft = data.get('PostedBefore')
+    TimeSpan = data.get("TimeSpan")
     TicketID = data.get('TicketID')
     Keywords = data.get('Keywords')
     WhcihVariables = data.get('WhichVariables')
     Cathegory = data.get('Cathegory')
     
     Content = Content.replace("<NEWLINE>", "\n")
+
+    if Plan == "Basic":
+        PostingsLeft = TimeSpan * 3
+    elif Plan == "Pro":
+        PostingsLeft = TimeSpan * 6
 
 
     Message = {
@@ -34,7 +51,7 @@ def handle_data():
         for cathegory in CATHEGORIES:
             if cathegory["Cathegory"] == Cathegory:
                 CATHEGORIES[Cathegory]["Ads"][WhichVariable-1] = Message
-    return CATHEGORIES, Keywords
+    return CATHEGORIES, Keywords, WhichVariable, Cathegory
 
 def Update_GitHub(CATHEGORIES):
     headers = {
@@ -50,7 +67,7 @@ def Update_GitHub(CATHEGORIES):
     print("GitHub Variable updated with status code:", response.status_code)
 
 
-def Update_Norion(WhichVariable, Keywords, Cathegory):
+def Update_Notion(WhichVariable, Keywords, Cathegory):
     if Cathegory == "RoTech":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
     elif Cathegory == "Aviation":
@@ -98,3 +115,9 @@ def Update_Norion(WhichVariable, Keywords, Cathegory):
     data = {results}
     response = requests.patch(url, headers=headers, json=data)
     print("Notion updated with status code:", response.status_code)
+
+def main():
+    Cathegories = Get_Cathegories_Variable()
+    Cathegories_New = handle_data(Cathegories)
+    Update_GitHub(Cathegories_New)
+    Update_Notion()
