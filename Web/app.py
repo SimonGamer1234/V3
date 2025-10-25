@@ -5,7 +5,9 @@ import requests
 
 
 CATHEGORIES = json.loads(os.getenv("CATHEGORIES"))
-
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+NOTION_API_KEY = os.getenv("NOTION_API_KEY")
+NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
 
 app = Flask(__name__)
 @app.route('/api/data', methods=['POST'])
@@ -35,7 +37,6 @@ def handle_data():
     return CATHEGORIES, Keywords
 
 def Update_GitHub(CATHEGORIES):
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
     headers = {
     'Accept': 'application/vnd.github+json',
     'Authorization': 'Bearer '+ GITHUB_TOKEN,
@@ -50,8 +51,6 @@ def Update_GitHub(CATHEGORIES):
 
 
 def Update_Norion(WhichVariable, Keywords, Cathegory):
-    NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-    NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
     if Cathegory == "RoTech":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
     elif Cathegory == "Aviation":

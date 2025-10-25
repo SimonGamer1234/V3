@@ -4,12 +4,11 @@ import time
 import random
 import os
 
-ACCOUNTS = os.getenv("ACCOUNTS")
-ACCOUNTS = json.loads(ACCOUNTS)
+ACCOUNTS = json.loads(os.getenv("ACCOUNTS"))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-SERVER_ADS = json.loads(os.getenv("BASE_AD"))
+SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
