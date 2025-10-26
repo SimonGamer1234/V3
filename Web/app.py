@@ -29,6 +29,7 @@ def Get_Cathegories_Variable():
     data = response.json()
     print(data)
     CATHEGORIES = data["value"]
+    CATHEGORIES = json.loads(CATHEGORIES)
     return CATHEGORIES  
 
 def handle_data(CATHEGORIES):
