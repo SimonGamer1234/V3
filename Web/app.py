@@ -123,4 +123,3 @@ def main():
     Update_GitHub(Cathegories_New)
     Update_Notion()
 
-main()
