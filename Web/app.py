@@ -38,7 +38,7 @@ def handle_data(CATHEGORIES):
     TimeSpan = data.get("TimeSpan")
     TicketID = data.get('TicketID')
     Keywords = data.get('Keywords')
-    WhcihVariables = data.get('WhichVariables')
+    WhichVariables = data.get('WhichVariables')
     Cathegory = data.get('Cathegory')
     
     Content = Content.replace("<NEWLINE>", "\n")
@@ -55,10 +55,11 @@ def handle_data(CATHEGORIES):
         "PostingsLeft": PostingsLeft,
         "TicketID": TicketID,
     }
-    for WhichVariable in WhcihVariables:
+    for WhichVariable in WhichVariables:
         for cathegory in CATHEGORIES:
+            index = CATHEGORIES.index(cathegory)
             if cathegory["Cathegory"] == Cathegory:
-                CATHEGORIES[Cathegory]["Ads"][WhichVariable-1] = Message
+                CATHEGORIES[index]["Ads"][WhichVariable-1] = Message
     return CATHEGORIES, Keywords, WhichVariable, Cathegory
 
 def Update_GitHub(CATHEGORIES):
