@@ -20,7 +20,8 @@ def Get_Cathegories_Variable():
         }
     response = requests.get(url, headers=headers)
     data = response.json()
-    CATHEGORIES = json.loads(data)
+    print(data)
+    CATHEGORIES = data
     return CATHEGORIES  
 
 def handle_data(CATHEGORIES):
