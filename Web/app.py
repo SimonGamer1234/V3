@@ -56,10 +56,11 @@ def handle_data(CATHEGORIES):
         "TicketID": TicketID,
     }
     for WhichVariable in WhichVariables:
+        number = -1
         for cathegory in CATHEGORIES:
-            index = CATHEGORIES.index(cathegory)
+            number += 1
             if cathegory["Cathegory"] == Cathegory:
-                CATHEGORIES[index]["Ads"][WhichVariable-1] = Message
+                CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
     return CATHEGORIES, Keywords, WhichVariable, Cathegory
 
 def Update_GitHub(CATHEGORIES):
