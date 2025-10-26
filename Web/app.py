@@ -122,3 +122,5 @@ def main():
     Cathegories_New = handle_data(Cathegories)
     Update_GitHub(Cathegories_New)
     Update_Notion()
+
+main()
