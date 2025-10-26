@@ -76,7 +76,7 @@ def Update_GitHub(CATHEGORIES):
     data = {"value":json.dumps(CATHEGORIES)}
     url  = f"https://api.github.com/repos/SimonGamer1234/V3/actions/variables/Cathegories"
     response = requests.patch(url, headers=headers, data=data) # Updates the GitHub variable
-    print("GitHub Variable updated with status code:", response.status_code)
+    print("GitHub Variable updated with status code:", response.status_code, response.text)
 
 
 def Update_Notion(WhichVariable, Keywords, Cathegory):
