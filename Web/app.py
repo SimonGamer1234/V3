@@ -13,9 +13,9 @@ app = Flask(__name__)
 
 def main():
     Cathegories = Get_Cathegories_Variable()
-    Cathegories_New, Keywords, WhichVariable, Cathegory = handle_data(Cathegories)
+    Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories)
     Update_GitHub(Cathegories_New)
-    Update_Notion(WhichVariable, Keywords, Cathegory)
+    Update_Notion(WhichVariables, Keywords, Cathegory)
 
 
 def Get_Cathegories_Variable():
@@ -57,7 +57,7 @@ def handle_data(CATHEGORIES):
             if cathegory["Cathegory"] == Cathegory:
                 CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
     print(data)
-    return CATHEGORIES, Keywords, WhichVariable, Cathegory
+    return CATHEGORIES, Keywords, WhichVariables, Cathegory
 
 def Update_GitHub(CATHEGORIES):
     headers = {
@@ -73,7 +73,7 @@ def Update_GitHub(CATHEGORIES):
     print("GitHub Variable updated with status code:", response.status_code, response.text)
 
 
-def Update_Notion(WhichVariable, Keywords, Cathegory):
+def Update_Notion(WhichVariables, Keywords, Cathegory):
     if Cathegory == "RoTech":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
     elif Cathegory == "Aviation":
@@ -110,7 +110,7 @@ def Update_Notion(WhichVariable, Keywords, Cathegory):
         Title = Title1[0]
         PlainText = Title["plain_text"]
         Titles.append(PlainText)
-    for VariablNumber in WhichVariable:
+    for VariablNumber in WhichVariables:
         Name = f"{WhichVariable} | {Keywords}"
         results[VariablNumber-1]["properties"]["Name"]["title"][0]["plain_text"] = Name
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}"
