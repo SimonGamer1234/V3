@@ -119,7 +119,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
                 'Content-Type': 'application/json',
                 'Notion-Version': '2022-06-28',
             }
-    data = {results}
+    data = results
     response = requests.patch(url, headers=headers, json=data)
     print("Notion updated with status code:", response.status_code)
 
