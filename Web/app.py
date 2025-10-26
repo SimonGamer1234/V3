@@ -111,7 +111,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
         PlainText = Title["plain_text"]
         Titles.append(PlainText)
     for VariablNumber in WhichVariables:
-        Name = f"{WhichVariable} | {Keywords}"
+        Name = f"{VariablNumber} | {Keywords}"
         results[VariablNumber-1]["properties"]["Name"]["title"][0]["plain_text"] = Name
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}"
     headers = {
