@@ -70,10 +70,10 @@ def Update_GitHub(CATHEGORIES):
     'Accept': 'application/vnd.github+json',
     'Authorization': 'Bearer '+ GITHUB_TOKEN,
     'X-GitHub-Api-Version': '2022-11-28',
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     }
 
-    data = {"value":CATHEGORIES}
+    data = {"value":json.dumps(CATHEGORIES)}
     url  = f"https://api.github.com/repos/SimonGamer1234/V3/actions/variables/Cathegories"
     response = requests.patch(url, headers=headers, data=data) # Updates the GitHub variable
     print("GitHub Variable updated with status code:", response.status_code)
@@ -103,6 +103,7 @@ def Update_Notion(WhichVariable, Keywords, Cathegory):
     response = requests.post(url, headers=headers, json=data)
 
     print(response.status_code)
+    print(url)
 
     data = response.json()
     results = data["results"]
