@@ -101,27 +101,28 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 
     data = response.json()
     results = data["results"]
-    Titles = []
-    for result in results:
-        Properties = result["properties"]
-        Name = Properties["Name"]
-        Title1 = Name["title"]
+    for variable in WhichVariables:
+        page = results[variable - 1]
+        page_id = page["id"]
+        new_name = f"{variable} | {Keywords}"
 
-        Title = Title1[0]
-        PlainText = Title["plain_text"]
-        Titles.append(PlainText)
-    for VariablNumber in WhichVariables:
-        Name = f"{VariablNumber} | {Keywords}"
-        results[VariablNumber-1]["properties"]["Name"]["title"][0]["plain_text"] = Name
-    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}"
-    headers = {
-                'Authorization': 'Bearer ' + NOTION_API_KEY,
-                'Content-Type': 'application/json',
-                'Notion-Version': '2022-06-28',
+        url = f"https://api.notion.com/v1/pages/{page_id}"
+        headers = {
+                    'Authorization': 'Bearer ' + NOTION_API_KEY,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2022-06-28',
+                }
+        data = {
+            "properties": {
+                "Name": {
+                    "title": [
+                        {"text": {"content": new_name}}
+                    ]
+                }
             }
-    data = results
-    response = requests.patch(url, headers=headers, json=data)
-    print("Notion updated with status code:", response.status_code)
+        }
+        response = requests.patch(url, headers=headers, json=data)
+        print("Notion updated with status code:", response.status_code)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
