@@ -59,13 +59,12 @@ def handle_data(CATHEGORIES):
         number = -1
         for cathegory in CATHEGORIES:
             print(cathegory)
-            
+
             print(CATHEGORIES)
 
             print(Cathegory)
             number += 1
-            if cathegory["Cathegory"] == Cathegory:
-                CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
+
     return CATHEGORIES, Keywords, WhichVariable, Cathegory
 
 def Update_GitHub(CATHEGORIES):
