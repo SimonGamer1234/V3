@@ -16,6 +16,7 @@ def main():
     Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories)
     Update_GitHub(Cathegories_New)
     Update_Notion(WhichVariables, Keywords, Cathegory)
+    return 200
 
 
 def Get_Cathegories_Variable():
