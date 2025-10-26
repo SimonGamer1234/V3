@@ -27,7 +27,6 @@ def Get_Cathegories_Variable():
         }
     response = requests.get(url, headers=headers)
     data = response.json()
-    print(data)
     CATHEGORIES = data["value"]
     CATHEGORIES = json.loads(CATHEGORIES)
     return CATHEGORIES  
@@ -50,19 +49,14 @@ def handle_data(CATHEGORIES):
         PostingsLeft = TimeSpan * 6
 
 
-    Message = {
-        "Content": Content,
-        "Plan": Plan,
-        "PostingsLeft": PostingsLeft,
-        "TicketID": TicketID,
-    }
+    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostingsLeft,"TicketID": TicketID,}
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:
             number += 1
             if cathegory["Cathegory"] == Cathegory:
                 CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
-
+    print(data)
     return CATHEGORIES, Keywords, WhichVariable, Cathegory
 
 def Update_GitHub(CATHEGORIES):
