@@ -11,6 +11,13 @@ NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
 app = Flask(__name__)
 @app.route('/api/data', methods=['POST'])
 
+def main():
+    Cathegories = Get_Cathegories_Variable()
+    Cathegories_New, Keywords, WhichVariable, Cathegory = handle_data(Cathegories)
+    Update_GitHub(Cathegories_New)
+    Update_Notion(WhichVariable, Keywords, Cathegory)
+
+
 def Get_Cathegories_Variable():
     url = f'https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES'
     headers = {
@@ -116,10 +123,4 @@ def Update_Notion(WhichVariable, Keywords, Cathegory):
     data = {results}
     response = requests.patch(url, headers=headers, json=data)
     print("Notion updated with status code:", response.status_code)
-
-def main():
-    Cathegories = Get_Cathegories_Variable()
-    Cathegories_New = handle_data(Cathegories)
-    Update_GitHub(Cathegories_New)
-    Update_Notion()
 
