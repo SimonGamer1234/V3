@@ -58,7 +58,11 @@ def handle_data(CATHEGORIES):
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:
-            print(cathegory, CATHEGORIES, Cathegory)
+            print(cathegory)
+            
+            print(CATHEGORIES)
+
+            print(Cathegory)
             number += 1
             if cathegory["Cathegory"] == Cathegory:
                 CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
