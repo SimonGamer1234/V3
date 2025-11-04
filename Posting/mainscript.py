@@ -14,7 +14,7 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
 Cathegories = json.loads(os.getenv("CATHEGORIES")) # All the cathegories
 
-TrackerFile = "tracker.json"
+TrackerFile = "Posting/tracker.json"
 
 PostingChanenelID = 1429473972096995370
 
