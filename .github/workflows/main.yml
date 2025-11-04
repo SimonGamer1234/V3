@@ -30,4 +30,4 @@ jobs:
           SERVER_ADS: ${{ vars.SERVER_ADS }}
 
         run: |
-          python mainscript.py
+          python Posting/mainscript.py
