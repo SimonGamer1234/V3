@@ -19,14 +19,17 @@ TrackerFile = "Posting/tracker.json"
 PostingChanenelID = 1429473972096995370
 
 
-def ServersPicker(): # Chooses in which servers it will post with which account
+def ServersPicker(Cathegories_JSON): # Chooses in which servers it will post with which account
+    
     with open(TrackerFile, 'r') as f:
-       data = json.load(f)
-       Accounts = data["Accounts"]
-       for Account in Accounts:
+        data = json.load(f)
+        Cathegory_PLACE = data["Number"]
+        Cathegory_JSON = Cathegories[Cathegory_PLACE]
+        Accounts = data["Accounts"]
+        for Account in Accounts:
           if Account["Cathegory"] == Cathegory_JSON["Cathegory"]:
               AdNumber = Account["AdNumber"]
-    Cathegory_PLACE = data["Number"]
+
     Plan = Accounts[Cathegory_PLACE]
     Cathegory_NAME = Cathegories[Cathegory_PLACE]["Cathegory"]
     AccountNumber = Plan["AccountNumber"]
