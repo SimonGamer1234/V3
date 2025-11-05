@@ -25,6 +25,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         data = json.load(f)
         Cathegory_PLACE = data["Number"]
         Accounts = data["Accounts"]
+        print(Cathegory_PLACE)
 
     Plan = Accounts[Cathegory_PLACE]
     Cathegory_NAME = Cathegories[Cathegory_PLACE]["Cathegory"]
@@ -34,7 +35,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
             data["Number"] = 0
         else:
             data["Number"] = Cathegory_PLACE + 1
-
+        print(data["Number"])
         if AccountNumber + 1 >= 3: 
             Plan["AccountNumber"] = 0
         else:
