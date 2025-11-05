@@ -41,7 +41,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
             data["Number"] = Cathegory_PLACE + 1
         json.dump(data, f, indent=4)
     with open(TrackerFile, 'w') as f: # Edits the Account tracker
-        if AccountNumber + 1 >= len(ACCOUNTS): 
+        if AccountNumber + 1 >= 3: 
             Plan["AccountNumber"] = 0
         else:
             Plan["AccountNumber"] = AccountNumber + 1
