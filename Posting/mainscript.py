@@ -176,5 +176,7 @@ def main():
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
         CustomerReport(Ad_JSON) # Sends a report to the customer
         EditingPostingsLeft(Ad_PLACE, Cathegory_PLACE) # Edits the amount
+    else:
+        print("Something is wrong with base variable status")
 main()
 
