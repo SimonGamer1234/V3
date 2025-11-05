@@ -24,12 +24,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
     with open(TrackerFile, 'r') as f:
         data = json.load(f)
         Cathegory_PLACE = data["Number"]
-        Cathegory_JSON = Cathegories[Cathegory_PLACE]
         Accounts = data["Accounts"]
-        Account_Cathegory = Cathegory_JSON["Cathegory"]
-        for Account in Accounts:
-          if Account["Cathegory"] == Account_Cathegory:
-              AdNumber = Account["AdNumber"]
 
     Plan = Accounts[Cathegory_PLACE]
     Cathegory_NAME = Cathegories[Cathegory_PLACE]["Cathegory"]
@@ -39,8 +34,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
             data["Number"] = 0
         else:
             data["Number"] = Cathegory_PLACE + 1
-        json.dump(data, f, indent=4)
-    with open(TrackerFile, 'w') as f: # Edits the Account tracker
+
         if AccountNumber + 1 >= 3: 
             Plan["AccountNumber"] = 0
         else:
