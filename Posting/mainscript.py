@@ -19,7 +19,7 @@ TrackerFile = "Posting/tracker.json"
 PostingChanenelID = 1429473972096995370
 
 
-def ServersPicker(Cathegories_JSON): # Chooses in which servers it will post with which account
+def ServersPicker(): # Chooses in which servers it will post with which account
     
     with open(TrackerFile, 'r') as f:
         data = json.load(f)
