@@ -91,8 +91,11 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the channels 
     ErrorLog = []
     Ad_JSON = SERVER_ADS[BV_Number]
-    URLs = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
-    for URL in URLs:
+    ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
+    for json in ID_JSON:
+        id = json["id"]
+        name = json["name"]
+        URL = https://discord.com/api/channels/{id}/messages
         headers = {
             "Authorization": AccountToken,
             "Content-Type": "application/json"
@@ -107,6 +110,7 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the chan
             ErrorLog.append({
                 "ID":URL, 
                 "StatusCode":StatusCode
+                "ServerName":name
                 })
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
