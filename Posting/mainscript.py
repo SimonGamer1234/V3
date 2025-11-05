@@ -94,7 +94,7 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the chan
     URLs = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for URL in URLs:
         headers = {
-            "Authorization": {AccountToken},
+            "Authorization": AccountToken,
             "Content-Type": "application/json"
         }
         params = {
