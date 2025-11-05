@@ -126,7 +126,8 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName): # Posts a messa
     }
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
-    print("Message to the ERROR CHANNEL posted with status code:", response.status_code) #
+    print("Message to the ERROR CHANNEL posted with status code:", response.status_code, response.text) #
+    print(ErrorLog)
 
 def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     AdContent = Ad_JSON["Content"]
