@@ -88,9 +88,9 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 
   return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
-def PostAd(Cathegory_JSON, AccountToken, Ad_JSON): # Posts the ads in the channels 
+def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the channels 
     ErrorLog = []
-    print(Ad_JSON)
+    Ad_JSON = SERVER_ADS[BV_Number]
     URLs = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for URL in URLs:
         headers = {
@@ -169,8 +169,8 @@ def main():
     Cathegory_JSON = Cathegories[Cathegory_PLACE] # Gets the Cathegory JSON
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
-        Ad_JSON = random.randint(0, len(SERVER_ADS))
-        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON) # Posts the Ad
+        BASEVARIABLE_NUMBER = random.randint(0, len(SERVER_ADS))
+        ErrorLog = PostAd(Cathegory_JSON, AccountToken, BASEVARIABLE_NUMBER) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON) # Posts the Ad
