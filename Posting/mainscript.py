@@ -60,7 +60,7 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
       data = json.load(f)
       Accounts = data["Accounts"]
       for Account in Accounts:
-          if Account[""] == Cathegory_JSON[""]:
+          if Account["Cathegory"] == Cathegory_JSON["Type"]:
               AdNumber = Account["AdNumber"]
           
   Ad = Ads[AdNumber]
