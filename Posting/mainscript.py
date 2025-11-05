@@ -171,6 +171,8 @@ def main():
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
         Ad_JSON = random.randint(0, len(SERVER_ADS))
+        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON) # Posts the Ad
+        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
