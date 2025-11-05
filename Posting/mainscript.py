@@ -111,8 +111,12 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number, Account_Cathegory, Account_N
                 })
         if StatusCode == 401:
             Unauthorized = True
+        elif StatusCode == 400:
+            BadRequest = True
     if Unauthorized == True:
         ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number}"
+    if BadRequest == True:
+        ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
 def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName): # Posts a message to the main report channel
