@@ -95,7 +95,7 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the chan
     for json in ID_JSON:
         id = json["id"]
         name = json["name"]
-        URL = https://discord.com/api/channels/{id}/messages
+        URL = f"https://discord.com/api/channels/{id}/messages"
         headers = {
             "Authorization": AccountToken,
             "Content-Type": "application/json"
