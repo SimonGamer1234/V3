@@ -59,7 +59,10 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
   with open(TrackerFile, 'r') as f: # Gets the AdNumber
       data = json.load(f)
       Accounts = data["Accounts"]
-      AdNumber = Accounts["AdNumber"]
+      for Account in Accounts:
+          if Account[""] == Cathegory_JSON[""]:
+              AdNumber = Account["AdNumber"]
+          
   Ad = Ads[AdNumber]
   BaseVariable_Status = Ad["Plan"]
   if BaseVariable_Status == "BASE":
