@@ -51,11 +51,14 @@ def ServersPicker(): # Chooses in which servers it will post with which account
 def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
     for account in ACCOUNTS:
         cathegory = account["Cathegory"]
+        print(Cathegory_NAME, cathegory)
         if Cathegory_NAME in cathegory:
             if account["AccountNumber"] == AccountNumber:
+                print(account["AccountNumber"],AccountNumber)
                 AccountToken = account["Token"]
                 AccountName = account["Name"]
                 return AccountToken, AccountName # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
+    
     print("Error: Account not found")
     return None, None
             
