@@ -53,8 +53,8 @@ def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to 
         cathegory = account["Cathegory"]
         print(Cathegory_NAME, cathegory)
         if Cathegory_NAME in cathegory:
+            print(account["AccountNumber"],AccountNumber)
             if account["AccountNumber"] == AccountNumber:
-                print(account["AccountNumber"],AccountNumber)
                 AccountToken = account["Token"]
                 AccountName = account["Name"]
                 return AccountToken, AccountName # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
