@@ -86,6 +86,8 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
   return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
 def PostAd(Cathegory_JSON, AccountToken, BV_Number, Account_Cathegory, Account_Number): # Posts the ads in the channels 
+    BadRequest = False
+    Unauthorized = False
     ErrorLog = []
     Ad_JSON = SERVER_ADS[BV_Number]
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
