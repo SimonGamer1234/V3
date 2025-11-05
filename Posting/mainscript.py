@@ -92,7 +92,7 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number, Account_Cathegory, Account_N
     Ad_JSON = SERVER_ADS[BV_Number]
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for json in ID_JSON:
-        time.sleep(random.randint(1-3))
+        time.sleep(random.randint(1,3))
         id = json["id"]
         name = json["name"]
         URL = f"https://discord.com/api/channels/{id}/messages"
