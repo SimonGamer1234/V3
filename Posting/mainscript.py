@@ -88,7 +88,7 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
                   Account["AdNumber"] = AdNumber + 1
       json.dump(data, f, indent=4)
 
-  return Ad, AdNumber, Ads # Returns the Ad json (1), AdNumber (2), List of all Ads in the cathegory (3) 
+  return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
 def PostAd(Cathegory_JSON, AccountToken, Ad_JSON): # Posts the ads in the channels 
     ErrorLog = []
@@ -177,6 +177,6 @@ def main():
         CustomerReport(Ad_JSON) # Sends a report to the customer
         EditingPostingsLeft(Ad_PLACE, Cathegory_PLACE) # Edits the amount
     else:
-        print("Something is wrong with base variable status")
+        print("Something is wrong with base variable status", BaseVariable_Status)
 main()
 
