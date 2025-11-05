@@ -88,7 +88,7 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 
   return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
-def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the channels 
+def PostAd(Cathegory_JSON, AccountToken, BV_Number, Account_Cathegory, Account_Number): # Posts the ads in the channels 
     ErrorLog = []
     Ad_JSON = SERVER_ADS[BV_Number]
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
@@ -112,6 +112,10 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the chan
                 "StatusCode":StatusCode,
                 "ServerName":name
                 })
+        if StatusCode == 401:
+            Unauthorized = True
+    if Unauthorized == True:
+        ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
 def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName): # Posts a message to the main report channel
