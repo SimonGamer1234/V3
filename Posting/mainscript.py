@@ -51,9 +51,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
 def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
     for account in ACCOUNTS:
         cathegory = account["Cathegory"]
-        print(Cathegory_NAME, cathegory)
         if Cathegory_NAME in cathegory:
-            print(account["AccountNumber"],AccountNumber)
             if account["AccountNumber"] == AccountNumber + 1:
                 AccountToken = account["Token"]
                 AccountName = account["Name"]
@@ -92,6 +90,7 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 
 def PostAd(Cathegory_JSON, AccountToken, Ad_JSON): # Posts the ads in the channels 
     ErrorLog = []
+    print(Ad_JSON)
     URLs = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for URL in URLs:
         headers = {
