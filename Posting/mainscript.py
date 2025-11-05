@@ -40,6 +40,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
             Plan["AccountNumber"] = 0
         else:
             Plan["AccountNumber"] = AccountNumber + 1
+        data["Accounts"][Cathegory_PLACE] = Plan
         json.dump(data, f, indent=4)
     
     return Cathegory_NAME, Cathegory_PLACE, AccountNumber # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
