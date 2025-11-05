@@ -26,8 +26,9 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         Cathegory_PLACE = data["Number"]
         Cathegory_JSON = Cathegories[Cathegory_PLACE]
         Accounts = data["Accounts"]
+        Account_Cathegory = Cathegory_JSON["Cathegory"]
         for Account in Accounts:
-          if Account["Cathegory"] == Cathegory_JSON["Cathegory"]:
+          if Account["Cathegory"] == Account_Cathegory:
               AdNumber = Account["AdNumber"]
 
     Plan = Accounts[Cathegory_PLACE]
