@@ -13,13 +13,13 @@
         {
             "Cathegory": "Advertising",
             "AccountNumber": 1,
-            "AdNumber": 0
+            "AdNumber": 1
         },
         {
             "Cathegory": "Gaming",
-            "AccountNumber": 0,
+            "AccountNumber": 1,
             "AdNumber": 0
         }
     ],
-    "Number": 3
+    "Number": 0
 }
