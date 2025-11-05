@@ -10,7 +10,7 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
-DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
 
 Cathegories = json.loads(os.getenv("CATHEGORIES")) # All the cathegories
 
