@@ -109,7 +109,7 @@ def PostAd(Cathegory_JSON, AccountToken, BV_Number): # Posts the ads in the chan
         if StatusCode != 200:
             ErrorLog.append({
                 "ID":URL, 
-                "StatusCode":StatusCode
+                "StatusCode":StatusCode,
                 "ServerName":name
                 })
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
