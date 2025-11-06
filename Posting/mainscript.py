@@ -36,7 +36,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         else:
             data["Number"] = Cathegory_PLACE + 1
         print(data["Number"])
-        if AccountNumber + 1 >= 3: 
+        if AccountNumber + 1 >= 4: 
             Plan["AccountNumber"] = 0
         else:
             Plan["AccountNumber"] = AccountNumber + 1
