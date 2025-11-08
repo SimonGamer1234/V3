@@ -29,7 +29,7 @@ jobs:
           CATHEGORIES: ${{ vars.CATHEGORIES }}
           SERVER_ADS: ${{ vars.SERVER_ADS }}
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
-          NOTION_DATABASE_ID_LIST: ${{ vars.NOTION_DATABASE_ID_LIST }}
+          NOTION_DATABASE_ID_LIST: ${{ secrets.NOTION_DATABASE_ID_LIST }}
 
         run: |
           python mainscript.py
