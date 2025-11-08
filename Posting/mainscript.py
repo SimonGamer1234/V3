@@ -85,11 +85,10 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 
   return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
-def PostAd(Cathegory_JSON, AccountToken, BV_Number, Account_Cathegory, Account_Number): # Posts the ads in the channels 
+def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
     BadRequest = False
     Unauthorized = False
     ErrorLog = []
-    Ad_JSON = SERVER_ADS[BV_Number]
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for json in ID_JSON:
         time.sleep(random.randint(1,3))
@@ -183,10 +182,11 @@ def main():
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
         BASEVARIABLE_NUMBER = 0
+        Ad_JSON = SERVER_ADS[BASEVARIABLE_NUMBER]
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, BASEVARIABLE_NUMBER, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
-        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON) # Posts the Ad
+        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
         CustomerReport(Ad_JSON) # Sends a report to the customer
         EditingPostingsLeft(Ad_PLACE, Cathegory_PLACE) # Edits the amount
