@@ -15,8 +15,6 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST").split(",")
-print(NOTION_DATABASE_ID_LIST)
-print(NOTION_API_KEY)
 
 Cathegories = json.loads(os.getenv("CATHEGORIES")) # All the cathegories
 
