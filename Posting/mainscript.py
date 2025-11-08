@@ -165,7 +165,7 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
 def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
     NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] - 1 # Decreases the Postings by 1
     if NewPostingsLeft == 0:
-        Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS))] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
+        Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
         Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
     headers = {
     'Accept': 'application/vnd.github+json',
@@ -237,7 +237,7 @@ def main():
     Cathegory_JSON = Cathegories[Cathegory_PLACE] # Gets the Cathegory JSON
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
-        BASEVARIABLE_NUMBER = 0
+        BASEVARIABLE_NUMBER = random.randint(0, len(SERVER_ADS) - 1)
         Ad_JSON = SERVER_ADS[BASEVARIABLE_NUMBER]
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, BASEVARIABLE_NUMBER, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
