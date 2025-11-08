@@ -239,7 +239,7 @@ def main():
     if BaseVariable_Status == True:
         BASEVARIABLE_NUMBER = random.randint(0, len(SERVER_ADS) - 1)
         Ad_JSON = SERVER_ADS[BASEVARIABLE_NUMBER]
-        ErrorLog = PostAd(Cathegory_JSON, AccountToken, BASEVARIABLE_NUMBER, Cathegory_NAME, AccountNumber) # Posts the Ad
+        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
