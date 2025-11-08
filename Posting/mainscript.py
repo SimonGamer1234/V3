@@ -12,6 +12,10 @@ SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
 
+NOTION_API_KEY = os.getenv("NOTION_API_KEY").strip()
+
+NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST").split(",")
+
 Cathegories = json.loads(os.getenv("CATHEGORIES")) # All the cathegories
 
 TrackerFile = "Posting/tracker.json"
@@ -162,6 +166,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] - 1 # Decreases the Postings by 1
     if NewPostingsLeft == 0:
         Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS))] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
+        Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
     headers = {
     'Accept': 'application/vnd.github+json',
     'Authorization': 'Bearer '+ GITHUB_TOKEN,
@@ -174,6 +179,57 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     response = requests.patch(url, headers=headers, data=data) # Updates the GitHub variable
     print("GitHub Variable updated with status code:", response.status_code)
 
+
+def Update_Notion(WhichVariables, Keywords, Cathegory):
+    if Cathegory == "RoTech":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
+    elif Cathegory == "Aviation":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[1]
+    elif Cathegory == "Advertising":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[2]
+    elif Cathegory == "Gaming":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[3]
+    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
+    headers = {
+            'Authorization': 'Bearer ' + NOTION_API_KEY,
+            'Content-Type': 'application/json',
+            'Notion-Version': '2022-06-28',
+        }
+    data = {
+    "sorts": [{
+        "property": "Name",
+        "direction": "ascending"
+    }]
+    }
+    response = requests.post(url, headers=headers, json=data)
+
+    print(response.status_code)
+    print(url)
+
+    data = response.json()
+    results = data["results"]
+    for variable in WhichVariables:
+        page = results[variable - 1]
+        page_id = page["id"]
+        new_name = f"{variable} | {Keywords}"
+
+        url = f"https://api.notion.com/v1/pages/{page_id}"
+        headers = {
+                    'Authorization': 'Bearer ' + NOTION_API_KEY,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2022-06-28',
+                }
+        data = {
+            "properties": {
+                "Name": {
+                    "title": [
+                        {"text": {"content": new_name}}
+                    ]
+                }
+            }
+        }
+        response = requests.patch(url, headers=headers, json=data)
+        print("Notion updated with status code:", response.status_code)
 
 def main():
     Cathegory_NAME, Cathegory_PLACE, AccountNumber = ServersPicker() # Picks the server and account
