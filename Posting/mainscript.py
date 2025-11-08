@@ -12,7 +12,7 @@ SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
 
-NOTION_API_KEY = os.getenv("NOTION_API_KEY").strip()
+NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST").split(",")
 
