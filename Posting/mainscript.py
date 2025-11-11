@@ -40,8 +40,8 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         else:
             data["Number"] = Cathegory_PLACE + 1
         print(data["Number"])
-        if AccountNumber + 1 >= 4: 
-            Plan["AccountNumber"] = 0
+        if AccountNumber == 4: 
+            Plan["AccountNumber"] = 1
         else:
             Plan["AccountNumber"] = AccountNumber + 1
         data["Accounts"][Cathegory_PLACE] = Plan
@@ -53,7 +53,7 @@ def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to 
     for account in ACCOUNTS:
         cathegory = account["Cathegory"]
         if Cathegory_NAME in cathegory:
-            if account["AccountNumber"] == AccountNumber + 1:
+            if account["AccountNumber"] == AccountNumber:
                 AccountToken = account["Token"]
                 AccountName = account["Name"]
                 return AccountToken, AccountName # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
