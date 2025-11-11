@@ -182,13 +182,13 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
     if Cathegory == "RoTech":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[0]
     elif Cathegory == "Aviation":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[1]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[1]
     elif Cathegory == "Advertising":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[2]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[2]
     elif Cathegory == "Gaming":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[3]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[3]
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
     headers = {
             'Authorization': 'Bearer ' + NOTION_API_KEY,
