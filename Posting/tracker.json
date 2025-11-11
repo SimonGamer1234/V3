@@ -2,13 +2,13 @@
     "Accounts": [
         {
             "Cathegory": "Gaming",
-            "AccountNumber": 1, 
+            "AccountNumber": 1,
             "AdNumber": 8
         },
         {
             "Cathegory": "RoTech",
-            "AccountNumber": 1,
-            "AdNumber": 8
+            "AccountNumber": 3,
+            "AdNumber": 6
         },
         {
             "Cathegory": "Aviation",
