@@ -178,7 +178,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
 
     data = {"value": json.dumps(Cathegories)}
     url  = f"https://api.github.com/repos/SimonGamer1234/V3/actions/variables/Cathegories"
-    response = requests.patch(url, headers=headers, data=data) # Updates the GitHub variable
+    response = requests.patch(url, headers=headers, json=data) # Updates the GitHub variable
     print("GitHub Variable updated with status code:", response.status_code, response.text)
 
 
