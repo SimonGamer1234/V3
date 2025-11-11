@@ -173,7 +173,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     'Accept': 'application/vnd.github+json',
     'Authorization': 'Bearer '+ GITHUB_TOKEN,
     'X-GitHub-Api-Version': '2022-11-28',
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     }
 
     data = {"value": json.dumps(Cathegories)}
