@@ -161,6 +161,8 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     Content = {"content": ReportContent}
     response = requests.post(CustomerChannelURL, headers=headers, json=Content)
     print("Message to the CUSTOMER CHANNEL posted with status code:", response.status_code)
+    if response.status_code != 200:
+        print("There was an error sending the customer report:", response.text)
 
 def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
     NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] - 1 # Decreases the Postings by 1
