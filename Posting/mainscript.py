@@ -168,6 +168,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] - 1 # Decreases the Postings by 1
     if NewPostingsLeft == 0:
         Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
+        Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["Content"] = ""
         Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
     headers = {
     'Accept': 'application/vnd.github+json',
