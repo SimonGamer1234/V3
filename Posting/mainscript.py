@@ -29,7 +29,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         data = json.load(f)
         Cathegory_PLACE = data["Number"]
         Accounts = data["Accounts"]
-        print(Cathegory_PLACE)
+        print(f"Cathegory Number: {Cathegory_PLACE}")
 
     Plan = Accounts[Cathegory_PLACE]
     Cathegory_NAME = Cathegories[Cathegory_PLACE]["Cathegory"]
@@ -39,7 +39,6 @@ def ServersPicker(): # Chooses in which servers it will post with which account
             data["Number"] = 0
         else:
             data["Number"] = Cathegory_PLACE + 1
-        print(data["Number"])
         if AccountNumber == 4: 
             Plan["AccountNumber"] = 1
         else:
@@ -119,6 +118,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
             Unauthorized = True
         elif StatusCode == 400:
             BadRequest = True
+    print(f"DETAILED ERROR LOG:, {ErrorLog}\n\n")
     if Unauthorized == True:
         ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number}"
     if BadRequest == True:
@@ -137,7 +137,7 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName): # Posts a messa
     }
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
-    print("Message to the ERROR CHANNEL posted with status code:", response.status_code, response.text) #
+    print("Message to the ERROR CHANNEL posted with status code:", response.status_code) #
     print(ErrorLog)
 
 def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
@@ -241,11 +241,13 @@ def main():
     Cathegory_JSON = Cathegories[Cathegory_PLACE] # Gets the Cathegory JSON
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
+        print("Base Variable is true")
         BASEVARIABLE_NUMBER = random.randint(0, len(SERVER_ADS) - 1)
         Ad_JSON = SERVER_ADS[BASEVARIABLE_NUMBER]
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
+        print("Base Variable is false")
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
         CustomerReport(Ad_JSON) # Sends a report to the customer
