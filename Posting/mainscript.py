@@ -121,8 +121,8 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
     print(f"DETAILED ERROR LOG:, {ErrorLog}\n\n")
     if Unauthorized == True:
         ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number}"
-    if BadRequest == True:
-        ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
+    # if BadRequest == True:
+    #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
 def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName): # Posts a message to the main report channel
