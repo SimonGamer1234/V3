@@ -125,5 +125,11 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
         response = requests.patch(url, headers=headers, json=data)
         print("Notion updated with status code:", response.status_code)
 
+@app.route('/cron', methods=['GET'])
+def cron():
+    return "Cron job executed", 200
+
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
