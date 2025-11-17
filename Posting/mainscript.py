@@ -127,7 +127,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
  
 def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
     if len(ErrorLog) > 0:
-        Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{ErrorLog}\nAd Content:\n`{Ad['Content']}`")
+        Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{ErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
     else:
         Content = ("All Ads posted successfully.")
     PostingChannelURL = f"https://discord.com/api/channels/{PostingChanenelID}/messages"
