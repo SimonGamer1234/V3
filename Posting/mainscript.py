@@ -235,6 +235,11 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
         response = requests.patch(url, headers=headers, json=data)
         print("Notion updated with status code:", response.status_code)
 
+def Pick_BaseVariable(Cathegory_Name):
+    for variable in SERVER_ADS:
+        if variable["Cathegory"] == Cathegory_Name:
+            BASEVARIABLE_NUMBER_Json = SERVER_ADS.index(variable)["Ads"].random.randint(0, len(variable["Ads"])-1)
+            return BASEVARIABLE_NUMBER_Json
 def main():
     Cathegory_NAME, Cathegory_PLACE, AccountNumber = ServersPicker() # Picks the server and account
     AccountToken, AccountName = DifferAccounts(Cathegory_NAME, AccountNumber) # Picks the account token and name
@@ -242,8 +247,7 @@ def main():
     Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True:
         print("Base Variable is true")
-        BASEVARIABLE_NUMBER = random.randint(0, len(SERVER_ADS) - 1)
-        Ad_JSON = SERVER_ADS[BASEVARIABLE_NUMBER]
+        Ad_JSON = Pick_BaseVariable(Cathegory_NAME) # Picks a BASE variable Ad
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
         HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
     elif BaseVariable_Status == False:
