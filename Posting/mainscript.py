@@ -238,7 +238,8 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
         if variable["Cathegory"] == Cathegory_Name:
-            BASEVARIABLE_NUMBER_Json = SERVER_ADS.index(variable)["Ads"].random.randint(0, len(variable["Ads"])-1)
+            index = SERVER_ADS.index(variable)
+            BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"].random.randint(0, len(variable["Ads"])-1)
             return BASEVARIABLE_NUMBER_Json
 def main():
     Cathegory_NAME, Cathegory_PLACE, AccountNumber = ServersPicker() # Picks the server and account
