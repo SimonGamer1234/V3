@@ -250,11 +250,11 @@ def main():
         print("Base Variable is true")
         Ad_JSON = Pick_BaseVariable(Cathegory_NAME) # Picks a BASE variable Ad
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
-        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
+        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName, Ad_JSON) # Handles any posting
     elif BaseVariable_Status == False:
         print("Base Variable is false")
         ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
-        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName) # Handles any posting
+        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName, Ad_JSON) # Handles any posting
         CustomerReport(Ad_JSON) # Sends a report to the customer
         EditingPostingsLeft(Ad_PLACE, Cathegory_PLACE) # Edits the amount
     else:
