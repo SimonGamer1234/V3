@@ -94,7 +94,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
     ErrorLog = []
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for json in ID_JSON:
-        time.sleep(random.randint(1,3))
+        time.sleep(random.randint(3,5))
         id = json["id"]
         name = json["name"]
         URL = f"https://discord.com/api/channels/{id}/messages"
@@ -137,7 +137,7 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a m
     }
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
-    print("Message to the ERROR CHANNEL posted with status code:", response.status_code) #
+    print("Message to the ERROR CHANNEL posted with status code:", response.status_code, response.text) #
     print(ErrorLog)
 
 def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
