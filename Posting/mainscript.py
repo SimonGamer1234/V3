@@ -130,7 +130,7 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a m
     for error in ErrorLog:
         NewErrorLog = f"{NewErrorLog}\n{error}"
     if len(ErrorLog) > 0:
-        Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{ErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
+        Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{NewErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
     else:
         Content = ("All Ads posted successfully.")
     PostingChannelURL = f"https://discord.com/api/channels/{PostingChanenelID}/messages"
