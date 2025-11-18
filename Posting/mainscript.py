@@ -110,7 +110,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
         StatusCode = response.status_code
         if StatusCode != 200:
             ErrorLog.append({
-                "ID":URL, 
+                "ID":id, 
                 "StatusCode":StatusCode,
                 "ServerName":name
                 })
@@ -126,6 +126,9 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
 def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
+    NewErrorLog = ""
+    for error in ErrorLog:
+        NewErrorLog = f"{NewErrorLog}\n{error}"
     if len(ErrorLog) > 0:
         Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{ErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
     else:
