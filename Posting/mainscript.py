@@ -146,11 +146,11 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a m
 def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     AdContent = Ad_JSON["Content"]
     AdPlan = Ad_JSON["Plan"]
-    PostingsLeft = Ad_JSON["PostingsLeft"] # Gets all the info from the JSON
+    PostingsLeft = Ad_JSON["PostingsLeft"]-1 # Gets all the info from the JSON
     TicketID = Ad_JSON["TicketID"]
     
     if PostingsLeft == 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {PostingsLeft} Ad: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
+        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {PostingsLeft}({PostingsLeft*50}) Ad: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
     elif PostingsLeft >= 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {TicketID}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft}")
     else:
