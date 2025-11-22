@@ -16,7 +16,7 @@ def main():
     Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories)
     Update_GitHub(Cathegories_New)
     Update_Notion(WhichVariables, Keywords, Cathegory)
-    return 200
+    return "Success",200
 
 
 def Get_Cathegories_Variable():
@@ -50,7 +50,7 @@ def handle_data(CATHEGORIES):
         PostingsLeft = TimeSpan * 6
 
 
-    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostingsLeft,"TicketID": TicketID,}
+    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostingsLeft,"Keywords": Keywords, "TicketID": TicketID,}
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:

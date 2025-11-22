@@ -168,12 +168,16 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
         print("There was an error sending the customer report:", response.text)
 
 def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
-    NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] - 1 # Decreases the Postings by 1
-    Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["PostingsLeft"] = NewPostingsLeft
-    if NewPostingsLeft == 0:
-        Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
-        Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["Content"] = ""
-        Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
+    ads = Cathegories[Cathegory_PLACE]["Ads"]
+    for ad in ads:
+        if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
+            Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"]-1 
+            NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"]
+            if NewPostingsLeft == 0:
+                Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
+                Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["Content"] = ""
+                Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
+
     headers = {
     'Accept': 'application/vnd.github+json',
     'Authorization': 'Bearer '+ GITHUB_TOKEN,
