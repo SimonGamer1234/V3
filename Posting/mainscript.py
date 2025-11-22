@@ -172,7 +172,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     for ad in ads:
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
             Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"]-1 
-            NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"]
+            NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
             if NewPostingsLeft == 0:
                 Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
                 Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE]["Content"] = ""
@@ -244,7 +244,6 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
-        if variable["Cathegory"] == Cathegory_Name:
             index = SERVER_ADS.index(variable)
             BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
             return BASEVARIABLE_NUMBER_Json
