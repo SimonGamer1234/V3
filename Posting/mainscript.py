@@ -171,7 +171,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     for ad in ads:
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
-            Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"]-1 
+            Cathegories[Cathegory_PLACE]["Ads"][ad]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]-1 
             NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
             if NewPostingsLeft == 0:
                 Cathegories[Cathegory_PLACE]["Ads"][Ad_PLACE] = SERVER_ADS[random.randint(0, len(SERVER_ADS)-1)] # Replaces the Ad with the BASE_AD - randomly choosed from the SERVER_ADS
