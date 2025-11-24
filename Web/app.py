@@ -152,6 +152,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     data = response.json()
     results = data["results"]
     for variable in WhichVariables:
+        print(variable)
         page = results[variable - 1]
         page_id = page["id"]
         new_name = f"{variable} | {Keywords}"
