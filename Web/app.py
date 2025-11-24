@@ -90,7 +90,7 @@ def Get_Content():
 
 def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichVariables, Cathegory):
         
-    
+    print(WhichVariables)
     Content = Content.replace("<NEWLINE>", "\n")
 
     if Plan == "Basic":
