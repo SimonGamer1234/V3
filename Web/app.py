@@ -80,6 +80,7 @@ def Get_Content():
     response2_json = response2.json()
     properties = response2_json["properties"]
     Message_Place = properties["Message Place"]["rich_text"][0]["plain_text"]
+    Message_Place = Message_Place.split(",")
     Timespan = properties["Timespan"]["number"]
     TicketID = properties["TicketID"]["rich_text"][0]["plain_text"]
     Plan = properties["Plan"]["select"]["name"]
