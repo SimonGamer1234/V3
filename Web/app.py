@@ -105,7 +105,7 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
         for cathegory in CATHEGORIES:
             number += 1
             if cathegory["Cathegory"] == Cathegory:
-                CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
+                CATHEGORIES[number]["Ads"][int(WhichVariable)-1] = Message
     return CATHEGORIES, Keywords, WhichVariables, Cathegory
 
 def Update_GitHub(CATHEGORIES):
