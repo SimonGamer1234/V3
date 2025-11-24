@@ -13,7 +13,8 @@ app = Flask(__name__)
 
 def main():
     Cathegories = Get_Cathegories_Variable()
-    Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories)
+    Content, Message_Place, Timespan, TicketID, Plan, Cathegory, Keywords = Get_Content()
+    Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories, Content, Plan , Timespan, TicketID, Keywords, Message_Place, Cathegory)
     Update_GitHub(Cathegories_New)
     Update_Notion(WhichVariables, Keywords, Cathegory)
     return "Success",200
@@ -30,17 +31,65 @@ def Get_Cathegories_Variable():
     data = response.json()
     CATHEGORIES = data["value"]
     CATHEGORIES = json.loads(CATHEGORIES)
-    return CATHEGORIES  
 
-def handle_data(CATHEGORIES):
-    data = request.get_json()
-    Content = data.get('Content')
-    Plan = data.get('Plan')
-    TimeSpan = data.get("TimeSpan")
-    TicketID = data.get('TicketID')
-    Keywords = data.get('Keywords')
-    WhichVariables = data.get('WhichVariables')
-    Cathegory = data.get('Cathegory')
+
+    return CATHEGORIES  
+def Get_Content():
+    finaltext = ""
+    annotation_list = [
+        {"name": "bold", "symbol": "**"},
+        {"name": "italic", "symbol": "*"},
+        {"name": "strikethrough", "symbol": "~"},
+        {"name": "underline", "symbol": "__"},
+        {"name": "code", "symbol": "`"}
+    ]
+
+    id = "23f0bcea8f40804fb74dd150116b5cc8"
+    url = f"https://api.notion.com/v1/blocks/{id}/children"
+    headers = {
+        'Authorization': 'Bearer ' + NOTION_API_KEY,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28',
+    }
+
+    response = requests.get(url, headers=headers)
+    print(response.status_code)
+    output = response.json()
+
+    # Loop through each block in the "results"
+    for block in output.get("results", []):
+        block_type = block["type"]
+        rich = block[block_type].get("rich_text", [])
+
+        # Combine all rich text parts in the block
+        for part in rich:
+            text = part["plain_text"]
+            annotation = part["annotations"]
+
+            # apply markdown styles
+            for style in annotation_list:
+                if annotation.get(style["name"]):
+                    text = f"{style['symbol']}{text}{style['symbol']}"
+
+            finaltext += text
+
+        # Add line breaks between blocks
+    pageid = "2970bcea8f40802ea360e67b1e008c7a"
+    url2 = f"https://api.notion.com/v1/pages/{pageid}"
+    response2 = requests.get(url2, headers=headers)
+    response2_json = response2.json()
+    properties = response2_json["properties"]
+    Message_Place = properties["Message Place"]["rich_text"][0]["plain_text"]
+    Timespan = properties["Timespan"]["number"]
+    TicketID = properties["TicketID"]["rich_text"][0]["plain_text"]
+    Plan = properties["Plan"]["select"]["name"]
+    Cathegory = properties["Cathegory"]["select"]["name"]
+    Keywords = properties["Keywords"]["title"][0]["plain_text"]
+    print(finaltext, Message_Place, TicketID, Plan, Cathegory, Keywords)
+    return finaltext, Message_Place, Timespan, TicketID, Plan, Cathegory, Keywords
+
+def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichVariables, Cathegory):
+        
     
     Content = Content.replace("<NEWLINE>", "\n")
 
@@ -57,7 +106,6 @@ def handle_data(CATHEGORIES):
             number += 1
             if cathegory["Cathegory"] == Cathegory:
                 CATHEGORIES[number]["Ads"][WhichVariable-1] = Message
-    print(data)
     return CATHEGORIES, Keywords, WhichVariables, Cathegory
 
 def Update_GitHub(CATHEGORIES):
