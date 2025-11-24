@@ -16,7 +16,7 @@ def main():
     Content, Message_Place, Timespan, TicketID, Plan, Cathegory, Keywords = Get_Content()
     Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories, Content, Plan , Timespan, TicketID, Keywords, Message_Place, Cathegory)
     Update_GitHub(Cathegories_New)
-    Update_Notion(WhichVariables, Keywords, Cathegory)
+    Update_Notion(Message_Place, Keywords, Cathegory)
     return "Success",200
 
 
