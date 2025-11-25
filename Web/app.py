@@ -9,7 +9,7 @@ NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
 
 app = Flask(__name__)
-@app.route('/api/data', methods=['POST'])
+@app.route('/api/data', methods=['GET'])
 
 def main():
     Cathegories = Get_Cathegories_Variable()
