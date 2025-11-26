@@ -245,7 +245,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
             index = SERVER_ADS.index(variable)
-            if SERVER_ADS[index]["Cathegory"] == Cathegory_Name
+            if SERVER_ADS[index]["Cathegory"] == Cathegory_Name:
                 BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
                 return BASEVARIABLE_NUMBER_Json
 def main():
