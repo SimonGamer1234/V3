@@ -150,9 +150,9 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     TicketID = Ad_JSON["TicketID"]
     
     if PostingsLeft == 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left) Ad: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
+        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
     elif PostingsLeft >= 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {TicketID}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft}({PostingsLeft*50})")
+        ReportContent = (f"Ad Plan: {AdPlan}\nnAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
     else:
         print("There is something wrong with ticket report. Pakoego will fix soon")
 
@@ -245,9 +245,8 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
             index = SERVER_ADS.index(variable)
-            if SERVER_ADS[index]["Cathegory"] == Cathegory_Name:
-                BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
-                return BASEVARIABLE_NUMBER_Json
+            BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
+            return BASEVARIABLE_NUMBER_Json
 def main():
     Cathegory_NAME, Cathegory_PLACE, AccountNumber = ServersPicker() # Picks the server and account
     AccountToken, AccountName = DifferAccounts(Cathegory_NAME, AccountNumber) # Picks the account token and name
