@@ -150,7 +150,7 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     TicketID = Ad_JSON["TicketID"]
     
     if PostingsLeft == 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {PostingsLeft}({PostingsLeft*50}) Ad: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
+        ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left) Ad: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
     elif PostingsLeft >= 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nTicket ID: {TicketID}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft}({PostingsLeft*50})")
     else:
