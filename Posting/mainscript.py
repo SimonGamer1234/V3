@@ -152,7 +152,7 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     if PostingsLeft == 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
     elif PostingsLeft >= 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nnAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
+        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
     else:
         print("There is something wrong with ticket report. Pakoego will fix soon")
 
