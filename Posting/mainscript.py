@@ -120,7 +120,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
             BadRequest = True
     print(f"DETAILED ERROR LOG:, {ErrorLog}\n\n")
     if Unauthorized == True:
-        ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number}"
+        ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number} <@1148657062599983237>"
     # if BadRequest == True:
     #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
@@ -150,7 +150,7 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     TicketID = Ad_JSON["TicketID"]
     
     if PostingsLeft == 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts.")
+        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts. <@1148657062599983237>")
     elif PostingsLeft >= 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
     else:
