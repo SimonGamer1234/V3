@@ -181,7 +181,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 def cron():
     return "Cron job executed", 200
 
-@app.route('/remove', methods=['POST'])
+@app.route('/remove', methods=['GET'])
 def Start():
     Message_Place_List, Cathegory = Get_Variables()
     CATHEGORIES = Get_Cathegories_Variable()
