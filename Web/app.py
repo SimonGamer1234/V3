@@ -182,7 +182,7 @@ def cron():
     return "Cron job executed", 200
 
 @app.route('/remove', methods=['POST'])
-def main():
+def Start():
     Message_Place_List, Cathegory = Get_Variables()
     CATHEGORIES = Get_Cathegories_Variable()
     CATHEGORIES_New = Remove(Message_Place_List, Cathegory, CATHEGORIES)
@@ -233,7 +233,7 @@ def Edit_Github(CATHEGORIES):
     url = "https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES"
     headers = {
         "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {Github_Token}",
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
         "X-GitHub-Api-Version": "2022-11-28",
     }
     data = {
