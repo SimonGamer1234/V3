@@ -190,7 +190,7 @@ def Start():
     print("GitHub Variable updated with status code:", status_code, text)
     Update_Notion(Message_Place_List, Keywords="_________", Cathegory=Cathegory)
 
-    return CATHEGORIES  
+    return "Success",200
 def Get_Variables():
     id = "2bd0bcea8f4080e0b98ee41deb945ef3"
     url = f"https://api.notion.com/v1/pages/{id}"
