@@ -179,6 +179,15 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 def cron():
     return "Cron job executed", 200
 
+@app.route('/remove', methods=['POST'])
+def Get_Variables():
+    id = "23f0bcea8f40804fb74dd150116b5cc8"
+    url = f"https://api.notion.com/v1/blocks/{id}/children"
+    headers = {
+        'Authorization': 'Bearer ' + NOTION_API_KEY,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28',
+    }
 
 
 if __name__ == '__main__':
