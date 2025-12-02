@@ -74,9 +74,11 @@ def Get_Content():
             finaltext += text
 
         # Add line breaks between blocks
+
     pageid = "2970bcea8f40802ea360e67b1e008c7a"
     url2 = f"https://api.notion.com/v1/pages/{pageid}"
     response2 = requests.get(url2, headers=headers)
+
     response2_json = response2.json()
     properties = response2_json["properties"]
     Message_Place = properties["Message Place"]["rich_text"][0]["plain_text"]
@@ -180,14 +182,118 @@ def cron():
     return "Cron job executed", 200
 
 @app.route('/remove', methods=['POST'])
+def main():
+    Message_Place_List, Cathegory = Get_Variables()
+    CATHEGORIES = Get_Cathegories_Variable()
+    CATHEGORIES_New = Remove(Message_Place_List, Cathegory, CATHEGORIES)
+    status_code, text = Edit_Github(CATHEGORIES_New)
+    print("GitHub Variable updated with status code:", status_code, text)
+    Update_Notion(Message_Place_List, Cathegory)
+
+def Get_Cathegories_Variable():
+    url = f'https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES'
+    headers = {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': f'Bearer {GITHUB_TOKEN}',
+            'X-GitHub-Api-Version': '2022-11-28',
+        }
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    CATHEGORIES = data["value"]
+    CATHEGORIES = json.loads(CATHEGORIES)
+
+
+    return CATHEGORIES  
 def Get_Variables():
-    id = "23f0bcea8f40804fb74dd150116b5cc8"
-    url = f"https://api.notion.com/v1/blocks/{id}/children"
+    id = "2bd0bcea8f4080e0b98ee41deb945ef3"
+    url = f"https://api.notion.com/v1/pages/{id}"
     headers = {
         'Authorization': 'Bearer ' + NOTION_API_KEY,
         'Content-Type': 'application/json',
         'Notion-Version': '2022-06-28',
     }
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    properties = data["properties"]
+    Message_Place = properties["Message Place"]["rich_text"][0]["plain_text"]
+    Message_Place_List = Message_Place.split(",")
+    Cathegory = properties["Cathegory"]["select"]["name"] 
+    print(Message_Place_List, Cathegory)
+    return Message_Place_List, Cathegory
+
+
+def Remove(Message_Place_List, Cathegory, CATHEGORIES):
+    for Cath in CATHEGORIES:
+        if Cath["Cathegory"] == Cathegory:
+            for place in Message_Place_List:
+                Cath["Ads"][int(place)-1]["Plan"] = "BASE"
+    return CATHEGORIES
+
+def Edit_Github(CATHEGORIES):
+    url = "https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {Github_Token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    data = {
+        "value": json.dumps(CATHEGORIES)
+    }
+    response = requests.patch(url, headers=headers, json=data)
+    return response.status_code, response.text
+
+def Update_Notion(WhichVariables, Cathegory):
+    if Cathegory == "RoTech":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[0]
+    elif Cathegory == "Aviation":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[1]
+    elif Cathegory == "Advertising":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[2]
+    elif Cathegory == "Gaming":
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST.split(",")[3]
+    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
+    headers = {
+            'Authorization': 'Bearer ' + NOTION_API_KEY,
+            'Content-Type': 'application/json',
+            'Notion-Version': '2022-06-28',
+        }
+    data = {
+    "sorts": [{
+        "property": "Name",
+        "direction": "ascending"
+    }]
+    }
+    response = requests.post(url, headers=headers, json=data)
+
+    print(response.status_code)
+    print(url)
+
+    data = response.json()
+    results = data["results"]
+    for variable in WhichVariables:
+        print(variable)
+        page = results[int(variable) - 1]
+        page_id = page["id"]
+        new_name = f"{variable} | _________"
+
+        url = f"https://api.notion.com/v1/pages/{page_id}"
+        headers = {
+                    'Authorization': 'Bearer ' + NOTION_API_KEY,
+                    'Content-Type': 'application/json',
+                    'Notion-Version': '2022-06-28',
+                }
+        data = {
+            "properties": {
+                "Name": {
+                    "title": [
+                        {"text": {"content": new_name}}
+                    ]
+                }
+            }
+        }
+        response = requests.patch(url, headers=headers, json=data)
+        print("Notion updated with status code:", response.status_code)
+
 
 
 if __name__ == '__main__':
