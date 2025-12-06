@@ -168,6 +168,7 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
         print("There was an error sending the customer report:", response.text)
 
 def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
+    print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     for ad in ads:
         print(ad["Keywords"], ads[Ad_PLACE]["Keywords"])
