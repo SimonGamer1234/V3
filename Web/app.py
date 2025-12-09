@@ -20,7 +20,8 @@ def main():
     Report_Message_Update_Notion = Update_Notion(Message_Place, Keywords, Cathegory)
 
     Report = Report_Message_GET_Gist + "\n" + Report_Message_PATCH_Gist + "\n" + "\n".join(Report_Message_Update_Notion)
-    return Report, 200
+    print(Report)
+    return str(Report), 200
 
 
 def Get_Cathegories_From_Gist():
