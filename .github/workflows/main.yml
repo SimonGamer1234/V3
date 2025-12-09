@@ -32,6 +32,8 @@ jobs:
           SERVER_ADS: ${{ vars.SERVER_ADS }}
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID_LIST: ${{ secrets.NOTION_DATABASE_ID_LIST }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          
 
         run: |
           python Posting/mainscript.py

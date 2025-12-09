@@ -8,6 +8,7 @@ ACCOUNTS = json.loads(os.getenv("ACCOUNTS"))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
+GIST_ID = os.getenv("GIST_ID")
 SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
@@ -22,8 +23,40 @@ TrackerFile = "Posting/tracker.json"
 
 PostingChanenelID = 1429473972096995370
 
+def Get_Cathegories_From_Gist():
+    url = f"https://api.github.com/gists/{GIST_ID}"
+    headers = {
+        'Authorization': 'Bearer ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json',
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        gist_data = response.json()
+        file_content = gist_data['files']['Cathegories.json']['content']
+        Cathegories = json.loads(file_content)
+        return Cathegories
+    
+def Update_Cathegories_Gist(Cathegories):
+    url = f"https://api.github.com/gists/{GIST_ID}"
+    headers = {
+        'Authorization': 'Bearer ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json',
+    }
+    data = {
+        "files": {
+            "Cathegories.json": {
+                "content": json.dumps(Cathegories, indent=4)
+            }
+        }
+    }
+    response = requests.patch(url, headers=headers, json=data)
+    if response.status_code == 200:
+        message = "Gist updated successfully."
+    else:
+        message = f"Failed to update gist. Status code: {response.status_code}"
+    return message
 
-def ServersPicker(): # Chooses in which servers it will post with which account
+def Get_Data(Cathegories): # Chooses in which servers it will post with which account
     
     with open(TrackerFile, 'r') as f:
         data = json.load(f)
@@ -31,6 +64,7 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         Accounts = data["Accounts"]
         print(f"Cathegory Number: {Cathegory_PLACE}")
 
+    Cathegory_JSON = Cathegories[Cathegory_PLACE]
     Plan = Accounts[Cathegory_PLACE]
     Cathegory_NAME = Cathegories[Cathegory_PLACE]["Cathegory"]
     AccountNumber = Plan["AccountNumber"]
@@ -46,9 +80,9 @@ def ServersPicker(): # Chooses in which servers it will post with which account
         data["Accounts"][Cathegory_PLACE] = Plan
         json.dump(data, f, indent=4)
     
-    return Cathegory_NAME, Cathegory_PLACE, AccountNumber # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
+    return Cathegory_NAME, Cathegory_JSON, Cathegory_PLACE, AccountNumber # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
 
-def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
+def Choose_Accounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
     for account in ACCOUNTS:
         cathegory = account["Cathegory"]
         if Cathegory_NAME in cathegory:
@@ -61,7 +95,7 @@ def DifferAccounts(Cathegory_NAME, AccountNumber): # Uses the Cathegory name to 
     return None, None
             
 
-def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad from the list of ads in the Cathegory's json
+def Pick_Ad(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad from the list of ads in the Cathegory's json
   Ads = Cathegory_JSON["Ads"]
   with open(TrackerFile, 'r') as f: # Gets the AdNumber
       data = json.load(f)
@@ -88,7 +122,7 @@ def AdPicker(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad
 
   return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
-def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
+def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
     BadRequest = False
     Unauthorized = False
     ErrorLog = []
@@ -125,7 +159,7 @@ def PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Num
     #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
-def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
+def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
     NewErrorLog = ""
     for error in ErrorLog:
         NewErrorLog = f"{NewErrorLog}\n{error}"
@@ -140,10 +174,13 @@ def HandlePostingErrors(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a m
     }
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
-    print("Message to the ERROR CHANNEL posted with status code:", response.status_code, response.text) #
-    print(ErrorLog)
+    if response.status_code == 200:
+        message = "Posting report sent successfully."
+    else:
+        message = f"Failed to send posting report. Text: {response.text}"
+    return message
 
-def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
+def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
     AdContent = Ad_JSON["Content"]
     AdPlan = Ad_JSON["Plan"]
     PostingsLeft = Ad_JSON["PostingsLeft"]-1 # Gets all the info from the JSON
@@ -164,10 +201,13 @@ def CustomerReport(Ad_JSON): # Sends a Report message to the Customer
     Content = {"content": ReportContent}
     response = requests.post(CustomerChannelURL, headers=headers, json=Content)
     print("Message to the CUSTOMER CHANNEL posted with status code:", response.status_code)
-    if response.status_code != 200:
-        print("There was an error sending the customer report:", response.text)
+    if response.status_code == 200:
+        message = "Customer report sent successfully."
+    else:
+        message = f"Failed to send customer report. Text: {response.text}"
+    return message
 
-def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
+def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     for ad in ads:
@@ -179,17 +219,7 @@ def EditingPostingsLeft(Ad_PLACE,Cathegory_PLACE): # Edits the amount of posting
                 Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
                 Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
-    headers = {
-    'Accept': 'application/vnd.github+json',
-    'Authorization': 'Bearer '+ GITHUB_TOKEN,
-    'X-GitHub-Api-Version': '2022-11-28',
-    'Content-Type': 'application/json',
-    }
-
-    data = {"value": json.dumps(Cathegories)}
-    url  = f"https://api.github.com/repos/SimonGamer1234/V3/actions/variables/Cathegories"
-    response = requests.patch(url, headers=headers, json=data) # Updates the GitHub variable
-    print("GitHub Variable updated with status code:", response.status_code, response.text)
+    Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
 
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
@@ -220,6 +250,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 
     data = response.json()
     results = data["results"]
+    status_codes = []
     for variable in WhichVariables:
         page = results[variable - 1]
         page_id = page["id"]
@@ -241,7 +272,11 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
             }
         }
         response = requests.patch(url, headers=headers, json=data)
-        print("Notion updated with status code:", response.status_code)
+        if response.status_code == 200:
+            status_codes.append("Success")
+        else:
+            status_codes.append(f"Notion update failed: {response.text}")
+    return status_codes
 
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
@@ -249,22 +284,23 @@ def Pick_BaseVariable(Cathegory_Name):
             BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
             return BASEVARIABLE_NUMBER_Json
 def main():
-    Cathegory_NAME, Cathegory_PLACE, AccountNumber = ServersPicker() # Picks the server and account
-    AccountToken, AccountName = DifferAccounts(Cathegory_NAME, AccountNumber) # Picks the account token and name
-    Cathegory_JSON = Cathegories[Cathegory_PLACE] # Gets the Cathegory JSON
-    Ad_JSON, Ad_PLACE, BaseVariable_Status = AdPicker(Cathegory_JSON) # Picks the Ad to post
-    if BaseVariable_Status == True:
+    Cathegories = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
+    Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories) # Picks the server and account
+    Account_Token, Account_Name = Choose_Accounts(Cathegory_Name, Account_Number) # Picks the account token and name
+    Message_JSON, Message_Place, BaseVariable_Status = Pick_Ad(Cathegory_JSON) # Picks the Ad to post
+    if BaseVariable_Status == True: 
         print("Base Variable is true")
-        Ad_JSON = Pick_BaseVariable(Cathegory_NAME) # Picks a BASE variable Ad
-        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
-        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName, Ad_JSON) # Handles any posting
+        Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
+        ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
+        Report_Message_1 = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
     elif BaseVariable_Status == False:
         print("Base Variable is false")
-        ErrorLog = PostAd(Cathegory_JSON, AccountToken, Ad_JSON, Cathegory_NAME, AccountNumber) # Posts the Ad
-        HandlePostingErrors(ErrorLog, Cathegory_NAME, AccountName, Ad_JSON) # Handles any posting
-        CustomerReport(Ad_JSON) # Sends a report to the customer
-        EditingPostingsLeft(Ad_PLACE, Cathegory_PLACE) # Edits the amount
+        ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
+        Report_Message_1 = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+        Report_Message_2 = Report_Customer(Message_JSON) # Sends a report to the customer
+        Report_Message_3 = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
+    print(f"Posting Report: {Report_Message_1, Report_Message_2, Report_Message_3}")
 main()
 
