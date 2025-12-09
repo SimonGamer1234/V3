@@ -7,33 +7,58 @@ import requests
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST")
+GIST_ID = os.getenv("GIST_ID")
 
 app = Flask(__name__)
 @app.route('/api/data', methods=['GET'])
 
 def main():
-    Cathegories = Get_Cathegories_Variable()
+    Cathegories, Report_Message_GET_Gist = Get_Cathegories_From_Gist()
     Content, Message_Place, Timespan, TicketID, Plan, Cathegory, Keywords = Get_Content()
     Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories, Content, Plan , Timespan, TicketID, Keywords, Message_Place, Cathegory)
-    Update_GitHub(Cathegories_New)
-    Update_Notion(Message_Place, Keywords, Cathegory)
-    return "Success",200
+    Report_Message_PATCH_Gist = Update_Cathegories_Gist(Cathegories_New)
+    Report_Message_Update_Notion = Update_Notion(Message_Place, Keywords, Cathegory)
+    return Report_Message_GET_Gist, Report_Message_PATCH_Gist, Report_Message_Update_Notion, 200
 
 
-def Get_Cathegories_Variable():
-    url = f'https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES'
+def Get_Cathegories_From_Gist():
+    url = f"https://api.github.com/gists/{GIST_ID}"
     headers = {
-            'Accept': 'application/vnd.github+json',
-            'Authorization': f'Bearer {GITHUB_TOKEN}',
-            'X-GitHub-Api-Version': '2022-11-28',
-        }
+        'Authorization': 'Bearer ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json',
+    }
     response = requests.get(url, headers=headers)
-    data = response.json()
-    CATHEGORIES = data["value"]
-    CATHEGORIES = json.loads(CATHEGORIES)
+    if response.status_code == 200:
+        message = "Gist fetched successfully."
+        gist_data = response.json()
+        file_content = gist_data['files']['Cathegories.json']['content']
+        Cathegories = json.loads(file_content)
+        return Cathegories, message
+    else:
+        message = f"Failed to fetch gist. Status code: {response.status_code}"
+        return None, message
+
+def Update_Cathegories_Gist(Cathegories):
+    url = f"https://api.github.com/gists/{GIST_ID}"
+    headers = {
+        'Authorization': 'Bearer ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json',
+    }
+    data = {
+        "files": {
+            "Cathegories.json": {
+                "content": json.dumps(Cathegories, indent=4)
+            }
+        }
+    }
+    response = requests.patch(url, headers=headers, json=data)
+    if response.status_code == 200:
+        message = "Gist updated successfully."
+    else:
+        message = f"Failed to update gist. Status code: {response.status_code}"
+    return message
 
 
-    return CATHEGORIES  
 def Get_Content():
     finaltext = ""
     annotation_list = [
@@ -111,19 +136,6 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
                 CATHEGORIES[number]["Ads"][int(WhichVariable)-1] = Message
     return CATHEGORIES, Keywords, WhichVariables, Cathegory
 
-def Update_GitHub(CATHEGORIES):
-    headers = {
-    'Accept': 'application/vnd.github+json',
-    'Authorization': 'Bearer '+ GITHUB_TOKEN,
-    'X-GitHub-Api-Version': '2022-11-28',
-    'Content-Type': 'application/json',
-    }
-
-    data = {"value":json.dumps(CATHEGORIES)}
-    url  = f"https://api.github.com/repos/SimonGamer1234/V3/actions/variables/Cathegories"
-    response = requests.patch(url, headers=headers, json=data) # Updates the GitHub variable
-    print("GitHub Variable updated with status code:", response.status_code, response.text)
-
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
     if Cathegory == "RoTech":
@@ -153,6 +165,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 
     data = response.json()
     results = data["results"]
+    status_codes = []
     for variable in WhichVariables:
         print(variable)
         page = results[int(variable) - 1]
@@ -175,7 +188,11 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
             }
         }
         response = requests.patch(url, headers=headers, json=data)
-        print("Notion updated with status code:", response.status_code)
+        if response.status_code == 200:
+            status_codes.append(f"Page {variable} updated successfully.")
+        else:
+            status_codes.append(f"Failed to update page {variable}. Status code: {response.status_code}")
+    return status_codes
 
 @app.route('/cron', methods=['GET'])
 def cron():
@@ -184,9 +201,9 @@ def cron():
 @app.route('/remove', methods=['GET'])
 def Start():
     Message_Place_List, Cathegory = Get_Variables()
-    CATHEGORIES = Get_Cathegories_Variable()
+    CATHEGORIES, Report_Message_Gist_GET = Get_Cathegories_From_Gist()
     CATHEGORIES_New = Remove(Message_Place_List, Cathegory, CATHEGORIES)
-    status_code, text = Edit_Github(CATHEGORIES_New)
+    status_code, Report_Message_Gist_PATCH = Update_Cathegories_Gist(CATHEGORIES_New)
     print("GitHub Variable updated with status code:", status_code, text)
     Update_Notion(Message_Place_List, Keywords="_________", Cathegory=Cathegory)
 
@@ -216,18 +233,6 @@ def Remove(Message_Place_List, Cathegory, CATHEGORIES):
                 Cath["Ads"][int(place)-1]["Plan"] = "BASE"
     return CATHEGORIES
 
-def Edit_Github(CATHEGORIES):
-    url = "https://api.github.com/repos/SimonGamer1234/V3/actions/variables/CATHEGORIES"
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    data = {
-        "value": json.dumps(CATHEGORIES)
-    }
-    response = requests.patch(url, headers=headers, json=data)
-    return response.status_code, response.text
 
 
 

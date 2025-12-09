@@ -31,11 +31,16 @@ def Get_Cathegories_From_Gist():
     }
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
+        message = "Gist fetched successfully."
         gist_data = response.json()
         file_content = gist_data['files']['Cathegories.json']['content']
         Cathegories = json.loads(file_content)
-        return Cathegories
+        return Cathegories, message
+    else:
+        message = f"Failed to fetch gist. Status code: {response.status_code}"
+        return None, message
     
+
 def Update_Cathegories_Gist(Cathegories):
     url = f"https://api.github.com/gists/{GIST_ID}"
     headers = {
@@ -280,11 +285,13 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
 
 def Pick_BaseVariable(Cathegory_Name):
     for variable in SERVER_ADS:
-            index = SERVER_ADS.index(variable)
-            BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
-            return BASEVARIABLE_NUMBER_Json
+            Cathegory = variable["Cathegory"]
+            if Cathegory_Name == Cathegory:
+                index = SERVER_ADS.index(variable)     
+                BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
+                return BASEVARIABLE_NUMBER_Json
 def main():
-    Cathegories = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
+    Cathegories, Report_Message_Gist = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
     Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories) # Picks the server and account
     Account_Token, Account_Name = Choose_Accounts(Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status = Pick_Ad(Cathegory_JSON) # Picks the Ad to post
@@ -292,15 +299,15 @@ def main():
         print("Base Variable is true")
         Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-        Report_Message_1 = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+        Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
     elif BaseVariable_Status == False:
         print("Base Variable is false")
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-        Report_Message_1 = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
-        Report_Message_2 = Report_Customer(Message_JSON) # Sends a report to the customer
-        Report_Message_3 = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
+        Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+        Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
+        Report_Message_Update = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
-    print(f"Posting Report: {Report_Message_1, Report_Message_2, Report_Message_3}")
+    print(f"Posting Report: {Report_Message_Customer, Report_Message_System, Report_Message_Gist, Report_Message_Update}")
 main()
 
