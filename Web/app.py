@@ -18,7 +18,9 @@ def main():
     Cathegories_New, Keywords, WhichVariables, Cathegory = handle_data(Cathegories, Content, Plan , Timespan, TicketID, Keywords, Message_Place, Cathegory)
     Report_Message_PATCH_Gist = Update_Cathegories_Gist(Cathegories_New)
     Report_Message_Update_Notion = Update_Notion(Message_Place, Keywords, Cathegory)
-    return Report_Message_GET_Gist, Report_Message_PATCH_Gist, Report_Message_Update_Notion, 200
+
+    Report = Report_Message_GET_Gist + "\n" + Report_Message_PATCH_Gist + "\n" + "\n".join(Report_Message_Update_Notion)
+    return Report, 200
 
 
 def Get_Cathegories_From_Gist():
