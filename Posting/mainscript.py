@@ -300,14 +300,14 @@ def main():
         Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
-        print(f"Posting Report: {Report_Message_System, Report_Message_Gist}")
+        print(f"{Report_Message_System}\n {Report_Message_Gist}")
     elif BaseVariable_Status == False:
         print("Base Variable is false")
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
         Report_Message_Update = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
-        print(f"Posting Report: {Report_Message_Customer, Report_Message_System, Report_Message_Gist, Report_Message_Update}")
+        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist}\n {Report_Message_Update}")
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
     
