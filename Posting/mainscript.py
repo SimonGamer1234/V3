@@ -222,9 +222,10 @@ def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings le
             NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
             if NewPostingsLeft == 0:
                 Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
-                Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
+                status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
-    Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
+    Report = Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
+    return Report, status_codes
 
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
@@ -249,9 +250,6 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     }]
     }
     response = requests.post(url, headers=headers, json=data)
-
-    print(response.status_code)
-    print(url)
 
     data = response.json()
     results = data["results"]
@@ -288,8 +286,8 @@ def Pick_BaseVariable(Cathegory_Name):
             Cathegory = variable["Cathegory"]
             if Cathegory_Name == Cathegory:
                 index = SERVER_ADS.index(variable)     
-                BASEVARIABLE_NUMBER_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
-                return BASEVARIABLE_NUMBER_Json
+                BaseVariable_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
+                return BaseVariable_Json
 def main():
     Cathegories, Report_Message_Gist = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
     Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories) # Picks the server and account
@@ -306,8 +304,8 @@ def main():
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
-        Report_Message_Update = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
-        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist}\n {Report_Message_Update}")
+        Report_Message_Update, Report_Notion_Update = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
+        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist}\n {Report_Message_Update}\n {Report_Notion_Update}")
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
     
