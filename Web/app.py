@@ -206,11 +206,10 @@ def Start():
     Message_Place_List, Cathegory = Get_Variables()
     CATHEGORIES, Report_Message_Gist_GET = Get_Cathegories_From_Gist()
     CATHEGORIES_New = Remove(Message_Place_List, Cathegory, CATHEGORIES)
-    status_code, Report_Message_Gist_PATCH = Update_Cathegories_Gist(CATHEGORIES_New)
-    print("GitHub Variable updated with status code:", status_code, text)
-    Update_Notion(Message_Place_List, Keywords="_________", Cathegory=Cathegory)
-
-    return "Success",200
+    Report_Message_Gist_PATCH = Update_Cathegories_Gist(CATHEGORIES_New)
+    status_codes = Update_Notion(Message_Place_List, Keywords="_________", Cathegory=Cathegory)
+    Report = Report_Message_Gist_GET + "\n" + Report_Message_Gist_PATCH + "\n" + "\n".join(status_codes)
+    return Report,200
 def Get_Variables():
     id = "2bd0bcea8f4080e0b98ee41deb945ef3"
     url = f"https://api.notion.com/v1/pages/{id}"
