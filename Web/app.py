@@ -232,7 +232,13 @@ def Remove(Message_Place_List, Cathegory, CATHEGORIES):
     for Cath in CATHEGORIES:
         if Cath["Cathegory"] == Cathegory:
             for place in Message_Place_List:
-                Cath["Ads"][int(place)-1]["Plan"] = "BASE"
+                Cath["Ads"][int(place)-1] = {
+                    "Content": "",
+                    "Plan": "BASE",
+                    "PostingsLeft": "",
+                    "Keywords": "",
+                    "TicketID": "",
+                }
     return CATHEGORIES
 
 
