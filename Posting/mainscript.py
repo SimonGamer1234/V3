@@ -218,6 +218,7 @@ def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings le
     for ad in ads:
         print(ad["Keywords"], ads[Ad_PLACE]["Keywords"])
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
+            print("Found the ad to update postings left", ad)
             Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]-1 
             NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
             if NewPostingsLeft == 0:
