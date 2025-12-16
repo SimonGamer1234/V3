@@ -131,6 +131,8 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
     BadRequest = False
     Unauthorized = False
     ErrorLog = []
+    Content = Ad_JSON["Content"]
+    print(f"Message:\n{Content}")
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for json in ID_JSON:
         time.sleep(random.randint(3,5))
@@ -142,7 +144,7 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
             "Content-Type": "application/json"
         }
         params = {
-            "content": Ad_JSON["Content"],
+            "content": Content,
         }
         response = requests.post(URL, headers=headers, json=params) # Posts the Ad in all of the channels using Token
 
@@ -216,13 +218,16 @@ def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings le
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     for ad in ads:
-        print(ad["Keywords"], ads[Ad_PLACE]["Keywords"])
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
             print("Found the ad to update postings left", ad)
-            Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]-1 
-            NewPostingsLeft = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
-            if NewPostingsLeft == 0:
+            Old_Postings = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
+            New_Postings = Old_Postings - 1
+            Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
+            print(f"Changing postings from {Old_Postings} to {New_Postings}")
+            if New_Postings == 0:
+                print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
+                print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]}")
                 status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
     Report = Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
