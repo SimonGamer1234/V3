@@ -220,6 +220,7 @@ def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings le
     for ad in ads:
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
             print("Found the ad to update postings left", ad)
+            index = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]
             Old_Postings = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
             New_Postings = Old_Postings - 1
             Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
@@ -227,7 +228,7 @@ def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings le
             if New_Postings == 0:
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
-                print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]}")
+                print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][index]}")
                 status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
     Report = Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
