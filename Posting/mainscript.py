@@ -17,8 +17,6 @@ NOTION_API_KEY = os.getenv("NOTION_API_KEY")
 
 NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST").split(",")
 
-Cathegories = json.loads(os.getenv("CATHEGORIES")) # All the cathegories
-
 TrackerFile = "Posting/tracker.json"
 
 PostingChanenelID = 1429473972096995370
@@ -214,7 +212,7 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
         message = f"Failed to send customer report. Text: {response.text}"
     return message
 
-def Update_Postings(Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
+def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     for ad in ads:
@@ -311,7 +309,7 @@ def main():
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
-        Report_Message_Update, Report_Notion_Update = Update_Postings(Message_Place, Cathegory_Place) # Edits the amount
+        Report_Message_Update, Report_Notion_Update = Update_Postings(Cathegories, Message_Place, Cathegory_Place) # Edits the amount
         print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist}\n {Report_Message_Update}\n {Report_Notion_Update}")
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
