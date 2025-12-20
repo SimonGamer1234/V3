@@ -108,6 +108,7 @@ def Pick_Ad(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad 
               AdNumber = Account["AdNumber"]
           
   Ad = Ads[AdNumber]
+  print(f"Message_JSON\n{Ad}")
   BaseVariable_Status = Ad["Plan"]
   if BaseVariable_Status == "BASE":
     BaseVariable_Status = True
@@ -130,7 +131,6 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
     Unauthorized = False
     ErrorLog = []
     Content = Ad_JSON["Content"]
-    print(f"Message:\n{Content}")
     ID_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
     for json in ID_JSON:
         time.sleep(random.randint(3,5))
