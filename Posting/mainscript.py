@@ -224,7 +224,7 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE): # Edits the amount o
             New_Postings = Old_Postings - 1
             Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
             print(f"Changing postings from {Old_Postings} to {New_Postings}")
-            if New_Postings == 0:
+            if New_Postings <= 0:
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
                 print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][index]}")
