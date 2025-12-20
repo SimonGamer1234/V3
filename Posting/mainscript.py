@@ -196,7 +196,7 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
     elif PostingsLeft >= 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
     else:
-        print("There is something wrong with ticket report. Pakoego will fix soon")
+        ReportContent = "There is something wrong with ticket report. Pakoego will fix soon <@1148657062599983237>" 
 
     headers = {
         "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
