@@ -109,6 +109,7 @@ def Pick_Ad(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad 
           
   Ad = Ads[AdNumber]
   print(f"Message_JSON\n{Ad}")
+  Message_Keyword = Ad["Keywords"]
   BaseVariable_Status = Ad["Plan"]
   if BaseVariable_Status == "BASE":
     BaseVariable_Status = True
@@ -124,7 +125,7 @@ def Pick_Ad(Cathegory_JSON): # Uses the AdNumber in tracker.json to pick the ad 
                   Account["AdNumber"] = AdNumber + 1
       json.dump(data, f, indent=4)
 
-  return Ad, AdNumber, BaseVariable_Status # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
+  return Ad, AdNumber, BaseVariable_Status, Message_Keyword # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
 def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
     BadRequest = False
@@ -212,12 +213,12 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
         message = f"Failed to send customer report. Text: {response.text}"
     return message
 
-def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
+def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE, Message_Keyword): # Edits the amount of postings left
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     status_codes = None
     for ad in ads:
-        if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
+        if ad["Keywords"] == Message_Keyword:
             print("Found the ad to update postings left", ad)
             index = ads.index(ad)
             Old_Postings = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
@@ -297,7 +298,7 @@ def main():
     Cathegories, Report_Message_Gist_GET = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
     Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories) # Picks the server and account
     Account_Token, Account_Name = Choose_Accounts(Cathegory_Name, Account_Number) # Picks the account token and name
-    Message_JSON, Message_Place, BaseVariable_Status = Pick_Ad(Cathegory_JSON) # Picks the Ad to post
+    Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON) # Picks the Ad to post
     if BaseVariable_Status == True: 
         print("Base Variable is true")
         Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
@@ -309,7 +310,7 @@ def main():
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
-        Cathegories, Report_Notion_Update = Update_Postings(Cathegories, Message_Place, Cathegory_Place) # Edits the amount
+        Cathegories, Report_Notion_Update = Update_Postings(Cathegories, Message_Place, Cathegory_Place, Message_Keyword) # Edits the amount
         Report_Message_Gist_PATCH = Update_Cathegories_Gist(Cathegories)
         print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET}\n {Report_Message_Gist_PATCH}\n {Report_Notion_Update}")
 
