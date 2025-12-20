@@ -215,6 +215,7 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
 def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE): # Edits the amount of postings left
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
+    status_codes = None
     for ad in ads:
         if ad["Keywords"] == ads[Ad_PLACE]["Keywords"]:
             print("Found the ad to update postings left", ad)
