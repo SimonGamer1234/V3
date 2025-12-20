@@ -229,8 +229,7 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE): # Edits the amount o
                 print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][index]}")
                 status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
-    Report = Update_Cathegories_Gist(Cathegories) # Updates the Gist with new postings left
-    return Report, status_codes
+    return Cathegories, status_codes
 
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
@@ -294,7 +293,7 @@ def Pick_BaseVariable(Cathegory_Name):
                 BaseVariable_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
                 return BaseVariable_Json
 def main():
-    Cathegories, Report_Message_Gist = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
+    Cathegories, Report_Message_Gist_GET = Get_Cathegories_From_Gist() # Gets the Cathegories from Gist
     Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories) # Picks the server and account
     Account_Token, Account_Name = Choose_Accounts(Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status = Pick_Ad(Cathegory_JSON) # Picks the Ad to post
@@ -303,14 +302,16 @@ def main():
         Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
-        print(f"{Report_Message_System}\n {Report_Message_Gist}")
+        print(f"{Report_Message_System}\n {Report_Message_Gist_GET}")
     elif BaseVariable_Status == False:
         print("Base Variable is false")
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
-        Report_Message_Update, Report_Notion_Update = Update_Postings(Cathegories, Message_Place, Cathegory_Place) # Edits the amount
-        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist}\n {Report_Message_Update}\n {Report_Notion_Update}")
+        Cathegories, Report_Notion_Update = Update_Postings(Cathegories, Message_Place, Cathegory_Place) # Edits the amount
+        Report_Message_Gist_PATCH = Update_Cathegories_Gist(Cathegories)
+        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET}\n {Report_Message_Gist_PATCH}\n {Report_Notion_Update}")
+
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
     
