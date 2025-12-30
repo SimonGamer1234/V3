@@ -75,12 +75,13 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
         Cathegory_PLACE = 4
         Cathegory_JSON = Cathegories_data[Cathegory_PLACE]
         Plan = Accounts[Cathegory_PLACE]
+        AccountNumber = Plan["AccountNumber"]
         AdNumber = Plan["AdNumber"]
         if AdNumber == 3:
             Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = 0
         else:
             Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = AdNumber + 1
-        if AdNumber == 2:
+        if AccountNumber == 2:
             Tracker_data["Accounts"][4]["AccountNumber"] = 1
         else:
             Tracker_data["Accounts"][4]["AccountNumber"] = AccountNumber + 1
