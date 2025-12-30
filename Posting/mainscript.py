@@ -236,7 +236,7 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
         message = f"Failed to send customer report. Text: {response.text}"
     return message
 
-def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE, Message_Keyword): # Edits the amount of postings left
+def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE, Message_Keyword, Server_ads_data): # Edits the amount of postings left
     print(Cathegory_PLACE, Ad_PLACE)
     ads = Cathegories[Cathegory_PLACE]["Ads"]
     status_codes = None
@@ -250,7 +250,7 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE, Message_Keyword): # E
             print(f"Changing postings from {Old_Postings} to {New_Postings}")
             if New_Postings <= 0:
                 print("Posting is finished. Replacing with base variable.....")
-                Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Cathegories[Cathegory_PLACE]["Cathegory"])
+                Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_PLACE]["Cathegory"])
                 print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][index]}")
                 status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
 
@@ -337,7 +337,7 @@ def main():
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
-        Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword) # Edits the amount
+        Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data) # Edits the amount
         Report_Message_Gist_PATCH = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
         print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET_1}\n {Report_Message_Gist_GET_2}\n {Report_Message_Gist_PATCH}\n {Report_Notion_Update}")
 
