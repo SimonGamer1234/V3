@@ -28,7 +28,7 @@ jobs:
           ACCOUNTS: ${{ vars.ACCOUNTS }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          CATHEGORIES: ${{ vars.CATHEGORIES }}
+          GIST_IDS: ${{ vars.GIST_IDS }}
           SERVER_ADS: ${{ vars.SERVER_ADS }}
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID_LIST: ${{ secrets.NOTION_DATABASE_ID_LIST }}

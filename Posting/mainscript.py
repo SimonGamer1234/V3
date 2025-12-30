@@ -12,8 +12,7 @@ global Accounts_gist_ID
 ACCOUNTS = json.loads(os.getenv("ACCOUNTS"))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-
-GIST_ID = os.getenv("GIST_ID")
+GIST_IDS = os.getenv("GIST_IDS").split(",")
 SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
@@ -27,9 +26,8 @@ TrackerFile = "Posting/tracker.json"
 Accounts_data = ACCOUNTS
 PostingChanenelID = 1429473972096995370
 
-Cathegories_gist_ID = 0
-Tracker_gist_ID = 0
-Accounts_gist_ID = 0
+Cathegories_gist_ID = GIST_IDS[1]
+Tracker_gist_ID = GIST_IDS[0]
 
 def Get_Gist(gist_ID):
     url = f"https://api.github.com/gists/{gist_ID}"
