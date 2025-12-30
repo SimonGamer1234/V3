@@ -312,7 +312,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
             status_codes.append(f"Notion update failed: {response.text}")
     return status_codes
 
-def Pick_BaseVariable(Cathegory_Name, Server_ads_data):
+def Pick_BaseVariable(Server_ads_data,Cathegory_Name):
     print(Server_ads_data)
     for variable in Server_ads_data:
             print(variable)
@@ -331,7 +331,7 @@ def main():
     if BaseVariable_Status == True: 
   
         print("Base Variable is true")
-        Message_JSON = Pick_BaseVariable(Cathegory_Name, Server_ads_data) # Picks a BASE variable Ad
+        Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}")
