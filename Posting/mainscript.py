@@ -180,16 +180,16 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
 def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
-    NewErrorLog = ""
-    for error in ErrorLog:
-        guild_name = error["guild_name"]
-        guild_id = error["guild_id"]
-        channel_name = error["channel_name"]
-        channel_id = error["channel_id"]
-        status_code = error["status_cod"]
-        description = f"{status_code} | {guild_name} ({guild_id})\n  Channel: {channel_name} ({channel_id})"
-        NewErrorLog = f"{NewErrorLog}\n{description}"
     if len(ErrorLog) > 0:
+        NewErrorLog = ""
+        for error in ErrorLog:
+            guild_name = error["guild_name"]
+            guild_id = error["guild_id"]
+            channel_name = error["channel_name"]
+            channel_id = error["channel_id"]
+            status_code = error["status_cod"]
+            description = f"{status_code} | {guild_name} ({guild_id})\n  Channel: {channel_name} ({channel_id})"
+            NewErrorLog = f"{NewErrorLog}\n{description}"
         Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{NewErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
     else:
         Content = ("All Ads posted successfully.")
