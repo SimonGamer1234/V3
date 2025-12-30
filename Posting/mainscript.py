@@ -313,7 +313,9 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     return status_codes
 
 def Pick_BaseVariable(Cathegory_Name, Server_ads_data):
+    print(Server_ads_data)
     for variable in Server_ads_data:
+            print(variable)
             Cathegory = variable["Cathegory"]
             if Cathegory_Name == Cathegory:
                 index = Server_ads_data.index(variable)     
