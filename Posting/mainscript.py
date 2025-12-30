@@ -325,8 +325,9 @@ def main():
     AdNumber, Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories_data, Tracker_data) # Picks the server and account
     Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
+    Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
     if BaseVariable_Status == True: 
-        Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
+  
         print("Base Variable is true")
         Message_JSON = Pick_BaseVariable(Cathegory_Name, Server_ads_data) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
