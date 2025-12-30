@@ -13,7 +13,6 @@ ACCOUNTS = json.loads(os.getenv("ACCOUNTS"))
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GIST_IDS = os.getenv("GIST_IDS").split(",")
-SERVER_ADS = json.loads(os.getenv("SERVER_ADS"))
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN").strip()
 
@@ -28,6 +27,7 @@ PostingChanenelID = 1429473972096995370
 
 Cathegories_gist_ID = GIST_IDS[1]
 Tracker_gist_ID = GIST_IDS[0]
+Server_ads_gist_ID = GIST_IDS[2]
 
 def Get_Gist(gist_ID):
     url = f"https://api.github.com/gists/{gist_ID}"
@@ -312,12 +312,12 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
             status_codes.append(f"Notion update failed: {response.text}")
     return status_codes
 
-def Pick_BaseVariable(Cathegory_Name):
-    for variable in SERVER_ADS:
+def Pick_BaseVariable(Cathegory_Name, Server_ads_data):
+    for variable in Server_ads_data:
             Cathegory = variable["Cathegory"]
             if Cathegory_Name == Cathegory:
-                index = SERVER_ADS.index(variable)     
-                BaseVariable_Json = SERVER_ADS[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
+                index = Server_ads_data.index(variable)     
+                BaseVariable_Json = Server_ads_data[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
                 return BaseVariable_Json
 def main():
     Cathegories_data, Cathegories_file_name, Report_Message_Gist_GET_1 = Get_Gist(Cathegories_gist_ID)
@@ -326,8 +326,9 @@ def main():
     Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
     if BaseVariable_Status == True: 
+        Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
         print("Base Variable is true")
-        Message_JSON = Pick_BaseVariable(Cathegory_Name) # Picks a BASE variable Ad
+        Message_JSON = Pick_BaseVariable(Cathegory_Name, Server_ads_data) # Picks a BASE variable Ad
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}")
