@@ -192,7 +192,7 @@ def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message
                 guild_id = error["guild-id"]
                 channel_name = error["channel-name"]
                 channel_id = error["channel-id"]
-                status_code = error["status_code"]
+                status_code = error["status-code"]
                 description = f"{status_code} | {guild_name} ({guild_id})\n  Channel: {channel_name} ({channel_id})"
                 NewErrorLog = f"{NewErrorLog}\n{description}"
             Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{NewErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
