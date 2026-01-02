@@ -187,15 +187,16 @@ def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message
             Content = ErrorLog
         else:
             NewErrorLog = ""
+            number = 1
             for error in ErrorLog:
                 guild_name = error["guild-name"]
                 guild_id = error["guild-id"]
                 channel_name = error["channel-name"]
                 channel_id = error["channel-id"]
                 status_code = error["status-code"]
-                description = f"{status_code} | {guild_name} ({guild_id})\n  Channel: {channel_name} ({channel_id})"
+                description = f"{number}.  **{status_code}** | {guild_name} ({guild_id})\n-# Channel: {channel_name} ({channel_id})"
                 NewErrorLog = f"{NewErrorLog}\n{description}"
-            Content = (f"Cathegory:{ServerCathegory}\nAccount:{AccountName}\nErrors:\n{NewErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
+            Content = (f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\n**Errors:**\n{NewErrorLog}\nAd Content:\n`{Ad['Content'][:200]}`")
     else:
         Content = ("All Ads posted successfully.")
     PostingChannelURL = f"https://discord.com/api/channels/{PostingChanenelID}/messages"
