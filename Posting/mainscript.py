@@ -94,6 +94,7 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
         Plan = Accounts[Cathegory_PLACE]
         Cathegory_NAME = Cathegories_data[Cathegory_PLACE]["Cathegory"]
         AccountNumber = Plan["AccountNumber"]
+        AdNumber = Plan["AdNumber"]
         if Cathegory_PLACE + 1 >= 4:
             Tracker_data["Number"] = 0
         else:
