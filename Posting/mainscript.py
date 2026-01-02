@@ -40,8 +40,9 @@ def Get_Gist(gist_ID):
         message = "Gist fetched successfully."
         gist = response.json()
         content = json.loads(next(iter(gist["files"].values()))["content"])
+        
         name = next(iter(gist["files"].values()))["filename"]
-        print(name)
+        print(name, content, message)
         return content,name, message
     else:
         message = f"Failed to fetch gist. Status code: {response.status_code}"
@@ -94,9 +95,9 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
         Cathegory_NAME = Cathegories_data[Cathegory_PLACE]["Cathegory"]
         AccountNumber = Plan["AccountNumber"]
         if Cathegory_PLACE + 1 >= 4:
-            Cathegories_data["Number"] = 0
+            Tracker_data["Number"] = 0
         else:
-            Cathegories_data["Number"] = Cathegory_PLACE + 1
+            Tracker_data["Number"] = Cathegory_PLACE + 1
         if AdNumber + 1 == len(Cathegory_JSON["Ads"]):
             Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = 0
         else:
