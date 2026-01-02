@@ -188,8 +188,8 @@ def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message
         else:
             NewErrorLog = ""
             for error in ErrorLog:
-                guild_name = error["guild_name"]
-                guild_id = error["guild_id"]
+                guild_name = error["guild-name"]
+                guild_id = error["guild-id"]
                 channel_name = error["channel_name"]
                 channel_id = error["channel_id"]
                 status_code = error["status_cod"]
