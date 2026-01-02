@@ -25,7 +25,7 @@ jobs:
 
       - name: Run posting script
         env:
-          ACCOUNTS: ${{ vars.ACCOUNTS }}
+          ACCOUNTS: ${{ secrets.ACCOUNTS }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GIST_IDS: ${{ vars.GIST_IDS }}
