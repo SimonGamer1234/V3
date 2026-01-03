@@ -306,7 +306,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     for variable in WhichVariables:
         page = results[variable]
         page_id = page["id"]
-        new_name = f"{variable} | {Keywords}"
+        new_name = f"{variable+1} | {Keywords}"
 
         url = f"https://api.notion.com/v1/pages/{page_id}"
         headers = {
