@@ -291,6 +291,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     else:
         NOTION_DATABASE_ID = "2d90bcea8f4080d9a67fd07874bbcb61"
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
+    print(url)
     headers = {
             'Authorization': 'Bearer ' + NOTION_API_KEY,
             'Content-Type': 'application/json',
