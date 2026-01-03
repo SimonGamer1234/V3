@@ -70,6 +70,7 @@ def Update_Gist(gist_id, data, file_name):
     return message
 
 def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will post with which account
+    Base_Variable_Check = False
     Accounts = Tracker_data["Accounts"]
     if Tracker_data["Test"] == True:
         Cathegory_NAME = "Test"
