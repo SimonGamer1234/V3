@@ -275,7 +275,7 @@ def Track_Posting(ad_number, cathegory_place ,cathegories_json):
     new_keywords = cathegories_json["Ads"][new_number]["Keywords"]
     old_keywords = cathegories_json["Ads"][ad_number]["Keywords"]
     cathegory = cathegories_json["Cathegory"]
-    Update_Notion(ad_number, old_keywords, cathegory)
+    Update_Notion([ad_number], old_keywords, cathegory)
     return Update_Notion([new_number], f"{new_keywords} 🟢", cathegory)
         
 
