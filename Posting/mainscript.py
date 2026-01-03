@@ -272,7 +272,7 @@ def Track_Posting(keywords, ad_number, cathegory):
     new_number = ad_number + 1
     if new_number > 11:
         new_number = 0
-    return Update_Notion([new_number], keywords, cathegory)
+    return Update_Notion([new_number], f"{keywords} 🟢, cathegory)
         
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
