@@ -264,10 +264,16 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Serv
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
                 print(f"Base variable:\n\n{Cathegories[Cathegory_Place]["Ads"][index]}")
-                status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
+                status_codes = Update_Notion(Ad_PLACE, "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
 
     return Cathegories, status_codes
 
+def Track_Posting(keywords, ad_number, cathegory):
+    new_number = ad_number + 1
+    if new_number > 11:
+        new_number = 0
+    return Update_Notion(new_number, keywords, cathegory)
+        
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
     if Cathegory == "RoTech":
@@ -298,7 +304,7 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     results = data["results"]
     status_codes = []
     for variable in WhichVariables:
-        page = results[variable - 1]
+        page = results[variable]
         page_id = page["id"]
         new_name = f"{variable} | {Keywords}"
 
@@ -338,6 +344,8 @@ def main():
     Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
     Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
+    Notion_Report = Update_Notion(AdNumber+2, f"{Message_Keyword} 🟢", Cathegory_Name)
+    Notion_Tracking_report = Track_Posting(Message_Keyword, AdNumber, Cathegory_Name)
     if BaseVariable_Status == True: 
         if Base_Variable_Check == True:
             Tracker_data_New["Base-Variable"][Cathegory_Place][Cathegory_Name] = 0
@@ -349,7 +357,7 @@ def main():
         else:
             Report_Message_System = Report_System(ServerCathegory=Cathegory_Name, AccountName=Account_Name, Skipping=True)
             Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
-        print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}\n{Report_Message_Gist_PATCH}")
+        print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}\n{Report_Message_Gist_PATCH}\n{Notion_Report}")
     elif BaseVariable_Status == False:
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
