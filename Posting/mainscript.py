@@ -99,7 +99,7 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
         if Base_Variable_Tracker == 2:
             Base_Variable_Check = True
         else:
-            Tracker_data["Base-Variable"][Cathegory_Place] = Base_Variable_Tracker + 1
+            Tracker_data["Base-Variables"][Cathegory_Place] = Base_Variable_Tracker + 1
         if Cathegory_Place == 3:
             Tracker_data["Number"] = 0
         else:
