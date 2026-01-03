@@ -354,7 +354,7 @@ def main():
             Tracker_data_New["Base-Variables"][Cathegory_Place][Cathegory_Name] = 0
             Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
             ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-            Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+            Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
             Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
             
         else:
@@ -363,7 +363,7 @@ def main():
         print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}\n{Report_Message_Gist_PATCH}\n{Notion_Tracking_Report}")
     elif BaseVariable_Status == False:
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-        Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+        Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data) # Edits the amount
         Report_Message_Gist_PATCH = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
