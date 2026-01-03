@@ -268,10 +268,12 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Serv
 
     return Cathegories, status_codes
 
-def Track_Posting(keywords, ad_number, cathegory):
+def Track_Posting(ad_number, cathegory_place ,cathegories_json):
     new_number = ad_number + 1
     if new_number > 11:
         new_number = 0
+    keywords = cathegories_json[cathegory_place]["Ads"][new_number]["Kewords"]
+    cathegory = cathegories_json[cathegory_place]["Cathegory"]
     return Update_Notion([new_number], f"{keywords} 🟢", cathegory)
         
 
@@ -344,7 +346,7 @@ def main():
     Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
     Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
-    Notion_Tracking_Report = Track_Posting(Message_Keyword, AdNumber, Cathegory_Name)
+    Notion_Tracking_Report = Track_Posting(AdNumber, Cathegory_Place, Cathegory_JSON)
     if BaseVariable_Status == True: 
         if Base_Variable_Check == True:
             Tracker_data_New["Base-Variable"][Cathegory_Place][Cathegory_Name] = 0
