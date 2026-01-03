@@ -196,6 +196,7 @@ def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message
                 status_code = error["status-code"]
                 description = f"{number}.  **{status_code}** | {guild_name} ({guild_id})\n-# Channel: {channel_name} ({channel_id})"
                 NewErrorLog = f"{NewErrorLog}\n{description}"
+                number += 1
             Content = (f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\n**Errors:**\n{NewErrorLog}\nAd Content:\n\n`{Ad['Content'][:200]}`")
     else:
         Content = ("All Ads posted successfully.")
