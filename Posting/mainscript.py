@@ -272,9 +272,11 @@ def Track_Posting(ad_number, cathegory_place ,cathegories_json):
     new_number = ad_number + 1
     if new_number > 11:
         new_number = 0
-    keywords = cathegories_json[cathegory_place]["Ads"][new_number]["Kewords"]
+    new_keywords = cathegories_json[cathegory_place]["Ads"][new_number]["Kewords"]
+    old_keywords = cathegories_json[cathegory_place]["Ads"][ad_number]["Kewords"]
     cathegory = cathegories_json[cathegory_place]["Cathegory"]
-    return Update_Notion([new_number], f"{keywords} 🟢", cathegory)
+    Update_Notion(ad_number, old_keywords, cathegory)
+    return Update_Notion([new_number], f"{new_keywords} 🟢", cathegory)
         
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
@@ -349,7 +351,7 @@ def main():
     Notion_Tracking_Report = Track_Posting(AdNumber, Cathegory_Place, Cathegory_JSON)
     if BaseVariable_Status == True: 
         if Base_Variable_Check == True:
-            Tracker_data_New["Base-Variable"][Cathegory_Place][Cathegory_Name] = 0
+            Tracker_data_New["Base-Variables"][Cathegory_Place][Cathegory_Name] = 0
             Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
             ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
             Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
