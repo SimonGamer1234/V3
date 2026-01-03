@@ -73,44 +73,48 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
     Accounts = Tracker_data["Accounts"]
     if Tracker_data["Test"] == True:
         Cathegory_NAME = "Test"
-        Cathegory_PLACE = 4
-        Cathegory_JSON = Cathegories_data[Cathegory_PLACE]
-        Plan = Accounts[Cathegory_PLACE]
+        Cathegory_Place = 4
+        Cathegory_JSON = Cathegories_data[Cathegory_Place]
+        Plan = Accounts[Cathegory_Place]
         AccountNumber = Plan["AccountNumber"]
         AdNumber = Plan["AdNumber"]
         if AdNumber == 2:
-            Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = 0
+            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = 0
         else:
-            Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = AdNumber + 1
+            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = AdNumber + 1
         if AccountNumber == 2:
             Tracker_data["Accounts"][4]["AccountNumber"] = 1
         else:
             Tracker_data["Accounts"][4]["AccountNumber"] = AccountNumber + 1
     else:
-        Cathegory_PLACE = Tracker_data["Number"]
-        print(f"Cathegory Number: {Cathegory_PLACE}")
+        Cathegory_Place = Tracker_data["Number"]
+        print(f"Cathegory Number: {Cathegory_Place}")
 
-        Cathegory_JSON = Cathegories_data[Cathegory_PLACE]
-        Plan = Accounts[Cathegory_PLACE]
-        Cathegory_NAME = Cathegories_data[Cathegory_PLACE]["Cathegory"]
+        Cathegory_JSON = Cathegories_data[Cathegory_Place]
+        Plan = Accounts[Cathegory_Place]
+        Cathegory_NAME = Cathegories_data[Cathegory_Place]["Cathegory"]
         AccountNumber = Plan["AccountNumber"]
         AdNumber = Plan["AdNumber"]
-        if Cathegory_PLACE + 1 >= 4:
+        Base_Variable_Tracker = Tracker_data["Base-Variables"][Cathegory_Place]
+        if Base_Variable_Tracker == 2:
+            Base_Variable_Check = True
+        else:
+            Tracker_data["Base-Variable"][Cathegory_Place] = Base_Variable_Tracker + 1
+        if Cathegory_Place == 3:
             Tracker_data["Number"] = 0
         else:
-            Tracker_data["Number"] = Cathegory_PLACE + 1
+            Tracker_data["Number"] = Cathegory_Place + 1
         if AdNumber + 1 == len(Cathegory_JSON["Ads"]):
-            Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = 0
+            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = 0
         else:
-            Tracker_data["Accounts"][Cathegory_PLACE]["AdNumber"] = AdNumber + 1
+            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = AdNumber + 1
         if AccountNumber == 4: 
             Plan["AccountNumber"] = 1
         else:
             Plan["AccountNumber"] = AccountNumber + 1
-        Tracker_data["Accounts"][Cathegory_PLACE] = Plan
-    Update_Gist(Tracker_gist_ID, Tracker_data, "tracker.json")
-
-    return AdNumber,Cathegory_NAME, Cathegory_JSON, Cathegory_PLACE, AccountNumber # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
+        Tracker_data["Accounts"][Cathegory_Place] = Plan
+    
+    return AdNumber,Cathegory_NAME, Cathegory_JSON, Cathegory_Place, AccountNumber,Tracker_data, Base_Variable_Check # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
 
 def Choose_Accounts(Accounts_data, Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
     for account in Accounts_data:
@@ -181,25 +185,28 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
     #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
     return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
  
-def Report_System(ErrorLog, ServerCathegory, AccountName, Ad): # Posts a message to the main report channel
-    if len(ErrorLog) > 0:
-        if isinstance(ErrorLog, str):
-            Content = ErrorLog
-        else:
-            NewErrorLog = ""
-            number = 1
-            for error in ErrorLog:
-                guild_name = error["guild-name"]
-                guild_id = error["guild-id"]
-                channel_name = error["channel-name"]
-                channel_id = error["channel-id"]
-                status_code = error["status-code"]
-                description = f"{number}.  **{status_code}** | {guild_name} ({guild_id})\n-# Channel: {channel_name} ({channel_id})"
-                NewErrorLog = f"{NewErrorLog}\n{description}"
-                number += 1
-            Content = (f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\n**Errors:**\n{NewErrorLog}\nAd Content:\n\n`{Ad['Content'][:200]}`")
+def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping=False): # Posts a message to the main report channel
+    if Skipping == True:
+        Content = f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\nIt wasnt 6 hours yet - **skipping posting**"
     else:
-        Content = ("All Ads posted successfully.")
+        if len(ErrorLog) > 0:
+            if isinstance(ErrorLog, str):
+                Content = ErrorLog
+            else:
+                NewErrorLog = ""
+                number = 1
+                for error in ErrorLog:
+                    guild_name = error["guild-name"]
+                    guild_id = error["guild-id"]
+                    channel_name = error["channel-name"]
+                    channel_id = error["channel-id"]
+                    status_code = error["status-code"]
+                    description = f"{number}.  **{status_code}** | {guild_name} ({guild_id})\n-# Channel: {channel_name} ({channel_id})"
+                    NewErrorLog = f"{NewErrorLog}\n{description}"
+                    number += 1
+                Content = (f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\n**Errors:**\n{NewErrorLog}\nAd Content:\n\n`{Ad['Content'][:200]}`")
+        else:
+            Content = ("All Ads posted successfully.")
     PostingChannelURL = f"https://discord.com/api/channels/{PostingChanenelID}/messages"
     Headers = {
         "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
@@ -240,23 +247,23 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
         message = f"Failed to send customer report. Text: {response.text}"
     return message
 
-def Update_Postings(Cathegories, Ad_PLACE,Cathegory_PLACE, Message_Keyword, Server_ads_data): # Edits the amount of postings left
-    print(Cathegory_PLACE, Ad_PLACE)
-    ads = Cathegories[Cathegory_PLACE]["Ads"]
+def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data): # Edits the amount of postings left
+    print(Cathegory_Place, Ad_PLACE)
+    ads = Cathegories[Cathegory_Place]["Ads"]
     status_codes = None
     for ad in ads:
         if ad["Keywords"] == Message_Keyword:
             print("Found the ad to update postings left", ad)
             index = ads.index(ad)
-            Old_Postings = Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"]
+            Old_Postings = Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostingsLeft"]
             New_Postings = Old_Postings - 1
-            Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
+            Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
             print(f"Changing postings from {Old_Postings} to {New_Postings}")
             if New_Postings <= 0:
                 print("Posting is finished. Replacing with base variable.....")
-                Cathegories[Cathegory_PLACE]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_PLACE]["Cathegory"])
-                print(f"Base variable:\n\n{Cathegories[Cathegory_PLACE]["Ads"][index]}")
-                status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_PLACE]["Cathegory"]) # Updates Notion
+                Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
+                print(f"Base variable:\n\n{Cathegories[Cathegory_Place]["Ads"][index]}")
+                status_codes = Update_Notion([Ad_PLACE + 1], "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
 
     return Cathegories, status_codes
 
@@ -326,19 +333,22 @@ def Pick_BaseVariable(Server_ads_data,Cathegory_Name):
 def main():
     Cathegories_data, Cathegories_file_name, Report_Message_Gist_GET_1 = Get_Gist(Cathegories_gist_ID)
     Tracker_data, Tracker_file_name, Report_Message_Gist_GET_2 = Get_Gist(Tracker_gist_ID)
-    AdNumber, Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number = Get_Data(Cathegories_data, Tracker_data) # Picks the server and account
+    AdNumber, Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number, Tracker_data_New, Base_Variable_Check = Get_Data(Cathegories_data, Tracker_data) # Picks the server and account
     Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
     Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
     Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
     if BaseVariable_Status == True: 
-  
-        print("Base Variable is true")
-        Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
-        ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-        Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+        if Base_Variable_Check == True:
+            Tracker_data_New["Base-Variable"][Cathegory_Place] = 0
+            Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
+            ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
+            Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
+            Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
+            
+        else:
+            Report_Message_System = Report_System(ServerCathegory=Cathegory_Name, AccountName=Account_Name, Skipping=True)
         print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}")
     elif BaseVariable_Status == False:
-        print("Base Variable is false")
         ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
