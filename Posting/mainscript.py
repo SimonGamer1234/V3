@@ -339,7 +339,7 @@ def main():
     Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
     if BaseVariable_Status == True: 
         if Base_Variable_Check == True:
-            Tracker_data_New["Base-Variable"][Cathegory_Place] = 0
+            Tracker_data_New["Base-Variable"][Cathegory_Place][Cathegory_Name] = 0
             Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
             ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
             Report_Message_System = Report_System(ErrorLog, Cathegory_Name, Account_Name, Message_JSON) # Handles any posting
