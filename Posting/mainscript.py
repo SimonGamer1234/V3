@@ -303,7 +303,6 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     }]
     }
     response = requests.post(url, headers=headers, json=data)
-    print(response.text)
     data = response.json()
     results = data["results"]
     status_codes = []
