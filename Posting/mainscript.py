@@ -303,35 +303,39 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     }]
     }
     response = requests.post(url, headers=headers, json=data)
-    data = response.json()
-    results = data["results"]
-    status_codes = []
-    for variable in WhichVariables:
-        page = results[variable]
-        page_id = page["id"]
-        new_name = f"{variable+1} | {Keywords}"
+    if response.status_code == 200:
+        print("Got database info succesfully notion")
+        data = response.json()
+        results = data["results"]
+        status_codes = []
+        for variable in WhichVariables:
+            page = results[variable]
+            page_id = page["id"]
+            new_name = f"{variable+1} | {Keywords}"
 
-        url = f"https://api.notion.com/v1/pages/{page_id}"
-        headers = {
-                    'Authorization': 'Bearer ' + NOTION_API_KEY,
-                    'Content-Type': 'application/json',
-                    'Notion-Version': '2022-06-28',
-                }
-        data = {
-            "properties": {
-                "Name": {
-                    "title": [
-                        {"text": {"content": new_name}}
-                    ]
+            url = f"https://api.notion.com/v1/pages/{page_id}"
+            headers = {
+                        'Authorization': 'Bearer ' + NOTION_API_KEY,
+                        'Content-Type': 'application/json',
+                        'Notion-Version': '2022-06-28',
+                    }
+            data = {
+                "properties": {
+                    "Name": {
+                        "title": [
+                            {"text": {"content": new_name}}
+                        ]
+                    }
                 }
             }
-        }
-        response = requests.patch(url, headers=headers, json=data)
-        if response.status_code == 200:
-            status_codes.append("Success")
-        else:
-            status_codes.append(f"Notion update failed: {response.text}")
-    return status_codes
+            response = requests.patch(url, headers=headers, json=data)
+            if response.status_code == 200:
+                status_codes.append("Success")
+            else:
+                status_codes.append(f"Notion update failed: {response.text}")
+        return status_codes
+    else:
+        print(response.text)
 
 def Pick_BaseVariable(Server_ads_data,Cathegory_Name):
     for variable in Server_ads_data:
