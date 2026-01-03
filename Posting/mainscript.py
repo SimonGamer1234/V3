@@ -95,11 +95,11 @@ def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will
         Cathegory_NAME = Cathegories_data[Cathegory_Place]["Cathegory"]
         AccountNumber = Plan["AccountNumber"]
         AdNumber = Plan["AdNumber"]
-        Base_Variable_Tracker = Tracker_data["Base-Variables"][Cathegory_Place]
+        Base_Variable_Tracker = Tracker_data["Base-Variables"][Cathegory_Place][0]
         if Base_Variable_Tracker == 2:
             Base_Variable_Check = True
         else:
-            Tracker_data["Base-Variables"][Cathegory_Place] = Base_Variable_Tracker + 1
+            Tracker_data["Base-Variables"][Cathegory_Place][0] = Base_Variable_Tracker + 1
         if Cathegory_Place == 3:
             Tracker_data["Number"] = 0
         else:
