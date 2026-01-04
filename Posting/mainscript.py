@@ -281,13 +281,13 @@ def Track_Posting(ad_number, cathegory_place ,cathegories_json):
 
 def Update_Notion(WhichVariables, Keywords, Cathegory):
     if Cathegory == "RoTech":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[0]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[0].strip()
     elif Cathegory == "Aviation":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[1]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[1].strip()
     elif Cathegory == "Advertising":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[2]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[2].strip()
     elif Cathegory == "Gaming":
-        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[3]
+        NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[3].strip()
     else:
         NOTION_DATABASE_ID = "2d90bcea8f4080d9a67fd07874bbcb61"
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
@@ -371,8 +371,8 @@ def main():
         Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data) # Edits the amount
-        Report_Message_Gist_PATCH = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
-        Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
+        Report_Message_Gist_PATCH_1 = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
+        Report_Message_Gist_PATCH_2 = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
         print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET_1}\n {Report_Message_Gist_GET_2}\n {Report_Message_Gist_PATCH}\n {Report_Notion_Update}\n{Notion_Tracking_Report}")
 
     else:
