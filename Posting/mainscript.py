@@ -268,7 +268,7 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Serv
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
                 print(f"Base variable:\n\n{Cathegories[Cathegory_Place]["Ads"][index]}")
-                status_codes = Update_Notion(Ad_PLACE, "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
+                status_codes = Update_Notion([Ad_PLACE], "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
 
     return Cathegories, status_codes
 
@@ -377,7 +377,7 @@ def main():
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data) # Edits the amount
         Report_Message_Gist_PATCH_1 = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
         Report_Message_Gist_PATCH_2 = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
-        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET_1}\n {Report_Message_Gist_GET_2}\n {Report_Message_Gist_PATCH}\n {Report_Notion_Update}\n{Notion_Tracking_Report}")
+        print(f"/{Report_Message_Customer}\n {Report_Message_System}\n {Report_Message_Gist_GET_1}\n {Report_Message_Gist_GET_2}\n {Report_Notion_Update}\n{Notion_Tracking_Report}")
 
     else:
         print("Something is wrong with base variable status", BaseVariable_Status)
