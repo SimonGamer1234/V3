@@ -24,6 +24,7 @@ TrackerFile = "Posting/tracker.json"
 
 Accounts_data = ACCOUNTS
 PostingChanenelID = 1429473972096995370
+PostingCheck = 1459189420635848714
 
 Cathegories_gist_ID = GIST_IDS[1]
 Tracker_gist_ID = GIST_IDS[0]
@@ -215,6 +216,9 @@ def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping
     }
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
+    if Ad != None:
+        Content = Ad["content"]
+        requests.post(PostingChannelURL, headers=Headers, json=Content)
     if response.status_code == 200:
         message = "Posting report sent successfully."
     else:
