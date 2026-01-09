@@ -264,7 +264,7 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Serv
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
                 print(f"Base variable:\n\n{Cathegories[Cathegory_Place]["Ads"][index]}")
-                status_codes = Update_Notion(Ad_PLACE, "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
+                status_codes = Update_Notion([Ad_PLACE], "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
 
     return Cathegories, status_codes
 
