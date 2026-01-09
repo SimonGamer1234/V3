@@ -218,7 +218,7 @@ def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
     if Ad != None:
         Content = {"content":Ad["Content"]}
-        requests.post(PostingChannelURL, headers=Headers, json=Content)
+        requests.post(PostingCheck, headers=Headers, json=Content)
     if response.status_code == 200:
         message = "Posting report sent successfully."
     else:
