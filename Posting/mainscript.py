@@ -217,8 +217,9 @@ def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping
     Content = {"content": Content}
     response = requests.post(PostingChannelURL, headers=Headers, json=Content)
     if Ad != None:
+        PostingCheckURL = f"https://discord.com/api/channels/{PostingCheck}/messages"
         Content = {"content":Ad["Content"]}
-        requests.post(PostingCheck, headers=Headers, json=Content)
+        requests.post(PostingCheckURL, headers=Headers, json=Content)
     if response.status_code == 200:
         message = "Posting report sent successfully."
     else:
