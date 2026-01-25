@@ -125,12 +125,12 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
     Content = Content.replace("<NEWLINE>", "\n")
 
     if Plan == "Basic":
-        PostingsLeft = TimeSpan * 3
+        PostsLeft = TimeSpan * 150
     elif Plan == "Pro":
-        PostingsLeft = TimeSpan * 6
+        PostsLeft = TimeSpan * 300
 
 
-    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostingsLeft,"Keywords": Keywords, "TicketID": TicketID,}
+    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostsLeft,"Keywords": Keywords, "TicketID": TicketID}
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:

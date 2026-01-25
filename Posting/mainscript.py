@@ -146,6 +146,7 @@ def Pick_Ad(Cathegory_JSON, AdNumber): # Uses the AdNumber in tracker.json to pi
     return Ad, AdNumber, BaseVariable_Status, Message_Keyword # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
 def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
+    succesful_posts = 0
     BadRequest = False
     Unauthorized = False
     ErrorLog = []
@@ -176,6 +177,8 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
                 "status-code": status_code
                             }
             ErrorLog.append(message_JSON)
+        else: 
+            succesful_posts += 1 
         if status_code == 401:
             Unauthorized = True
         elif status_code == 400:
@@ -185,7 +188,7 @@ def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Accou
         ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number} <@1148657062599983237>"
     # if BadRequest == True:
     #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
-    return ErrorLog # Returns a JSON of all the Errors (Status code not 200)
+    return ErrorLog, succesful_posts # Returns a JSON of all the Errors (Status code not 200)
  
 def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping=False): # Posts a message to the main report channel
     if Skipping == True:
@@ -226,16 +229,16 @@ def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping
         message = f"Failed to send posting report. Text: {response.text}"
     return message
 
-def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
+def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the Customer
     AdContent = Ad_JSON["Content"]
     AdPlan = Ad_JSON["Plan"]
-    PostingsLeft = Ad_JSON["PostingsLeft"]-1 # Gets all the info from the JSON
+    PostingsLeft = Ad_JSON["PostsLeft"]-succesful_posts # Gets all the info from the JSON
     TicketID = Ad_JSON["TicketID"]
     
     if PostingsLeft == 0:
         ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts. <@1148657062599983237>")
     elif PostingsLeft >= 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPostings Left: {PostingsLeft} (Approximitely {PostingsLeft*50} posts left.)")
+        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPosts Left: {PostingsLeft}")
     else:
         ReportContent = "There is something wrong with ticket report. Pakoego will fix soon <@1148657062599983237>" 
 
@@ -253,7 +256,7 @@ def Report_Customer(Ad_JSON): # Sends a Report message to the Customer
         message = f"Failed to send customer report. Text: {response.text}"
     return message
 
-def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data): # Edits the amount of postings left
+def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts): # Edits the amount of postings left
     print(Cathegory_Place, Ad_PLACE)
     ads = Cathegories[Cathegory_Place]["Ads"]
     status_codes = None
@@ -261,10 +264,10 @@ def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Serv
         if ad["Keywords"] == Message_Keyword:
             print("Found the ad to update postings left", ad)
             index = ads.index(ad)
-            Old_Postings = Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostingsLeft"]
-            New_Postings = Old_Postings - 1
-            Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostingsLeft"] = New_Postings
-            print(f"Changing postings from {Old_Postings} to {New_Postings}")
+            Old_Posts = Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostsLeft"]
+            New_Postings = Old_Posts - succesful_posts
+            Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostsLeft"] = New_Postings
+            print(f"Changing postings from {Old_Posts} to {New_Postings}")
             if New_Postings <= 0:
                 print("Posting is finished. Replacing with base variable.....")
                 Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
@@ -372,7 +375,7 @@ def main():
             Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
         print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}\n{Report_Message_Gist_PATCH}\n{Notion_Tracking_Report}")
     elif BaseVariable_Status == False:
-        ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
+        ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
         Report_Message_Customer = Report_Customer(Message_JSON) # Sends a report to the customer
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data) # Edits the amount
