@@ -366,7 +366,7 @@ def main():
         if Base_Variable_Check == True:
             Tracker_data_New["Base-Variables"][Cathegory_Place][Cathegory_Name] = 0
             Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
-            ErrorLog = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
+            ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
             Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
             Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
             
