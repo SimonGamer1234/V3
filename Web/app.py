@@ -130,7 +130,7 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
         PostsLeft = TimeSpan * 300
 
 
-    Message = {"Content": Content,"Plan": Plan,"PostingsLeft": PostsLeft,"Keywords": Keywords, "TicketID": TicketID}
+    Message = {"Content": Content,"Plan": Plan,"PostsLeft": PostsLeft,"Keywords": Keywords, "TicketID": TicketID}
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:
@@ -235,7 +235,7 @@ def Remove(Message_Place_List, Cathegory, CATHEGORIES):
                 Cath["Ads"][int(place)-1] = {
                     "Content": "",
                     "Plan": "BASE",
-                    "PostingsLeft": "",
+                    "PostsLeft": "",
                     "Keywords": "",
                     "TicketID": "",
                 }
