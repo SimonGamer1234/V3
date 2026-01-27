@@ -235,7 +235,7 @@ def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the C
     PostsLeft = Ad_JSON["PostsLeft"]-succesful_posts # Gets all the info from the JSON
     TicketID = Ad_JSON["TicketID"]
     Keywords = Ad_JSON["Keywords"]
-    ReportMessageID = Ad_JSON["ReportMessageID"]
+    ReportMessageID = Ad_JSON.get("ReportMessageID")
     headers = {
         "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
         "Content-Type": "application/json"
