@@ -130,7 +130,7 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
         PostsLeft = TimeSpan * 300
 
 
-    Message = {"Content": Content,"Plan": Plan,"PostsLeft": PostsLeft,"Keywords": Keywords, "TicketID": TicketID}
+    Message = {"Content": Content,"Plan": Plan,"PostsLeft": PostsLeft,"Keywords": Keywords, "TicketID": TicketID, "ReportMessageID": None}
     for WhichVariable in WhichVariables:
         number = -1
         for cathegory in CATHEGORIES:
