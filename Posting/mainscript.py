@@ -232,29 +232,35 @@ def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping
 def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the Customer
     AdContent = Ad_JSON["Content"]
     AdPlan = Ad_JSON["Plan"]
-    PostingsLeft = Ad_JSON["PostsLeft"]-succesful_posts # Gets all the info from the JSON
+    PostsLeft = Ad_JSON["PostsLeft"]-succesful_posts # Gets all the info from the JSON
     TicketID = Ad_JSON["TicketID"]
-    
-    if PostingsLeft == 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nYour ad has completed all its posts. <@1148657062599983237>")
-    elif PostingsLeft >= 0:
-        ReportContent = (f"Ad Plan: {AdPlan}\nAd: `{AdContent[:200]}...`\nPosts Left: {PostingsLeft}")
-    else:
-        ReportContent = "There is something wrong with ticket report. Pakoego will fix soon <@1148657062599983237>" 
-
+    Keywords = Ad_JSON["Keywords"]
+    ReportMessageID = Ad_JSON["ReportMessageID"]
     headers = {
         "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
         "Content-Type": "application/json"
     }
-    CustomerChannelURL = f"https://discord.com/api/channels/{TicketID}/messages"
-    Content = {"content": ReportContent}
-    response = requests.post(CustomerChannelURL, headers=headers, json=Content)
-    print("Message to the CUSTOMER CHANNEL posted with status code:", response.status_code)
-    if response.status_code == 200:
-        message = "Customer report sent successfully."
+
+    data = {
+        "embeds": [
+            {
+                "title": f"{Keywords} | {AdPlan}",
+                "description": f"{PostsLeft} posts left",
+                "color": int("66107A", 16)
+            }
+        ]
+    }
+    if ReportMessageID == None:
+        url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
+        r = requests.post(url, headers=headers, json=data)
+        print(r.status_code, r.text)
+        message_id = r.json()["id"]
+        Ad_JSON["ReportMessageID"] = message_id
     else:
-        message = f"Failed to send customer report. Text: {response.text}"
-    return message
+        edit_url = f"https://discord.com/api/v10/channels/{TicketID}/messages/{message_id}"
+        r = requests.patch(edit_url, headers=headers, json=data)
+        print(r.status_code, r.text)
+    return Ad_JSON
 
 def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts): # Edits the amount of postings left
     print(Cathegory_Place, Ad_PLACE)
@@ -377,7 +383,8 @@ def main():
     elif BaseVariable_Status == False:
         ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
-        Report_Message_Customer = Report_Customer(Message_JSON, succesful_posts) # Sends a report to the customer
+        Ad_Json = Report_Customer(Message_JSON, succesful_posts) # Sends a report to the customer
+        Cathegories_data[Cathegory_Place]["Ads"][AdNumber] = Ad_Json
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts) # Edits the amount
         Report_Message_Gist_PATCH_1 = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
         Report_Message_Gist_PATCH_2 = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
