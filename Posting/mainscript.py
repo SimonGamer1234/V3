@@ -249,17 +249,11 @@ def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the C
                 "color": int("66107A", 16)
             }
         ]
-    }
-    if ReportMessageID == None:
         url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
         r = requests.post(url, headers=headers, json=data)
         print(r.status_code, r.text)
         message_id = r.json()["id"]
         Ad_JSON["ReportMessageID"] = message_id
-    else:
-        edit_url = f"https://discord.com/api/v10/channels/{TicketID}/messages/{message_id}"
-        r = requests.patch(edit_url, headers=headers, json=data)
-        print(r.status_code, r.text)
     return Ad_JSON
 
 def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts): # Edits the amount of postings left
