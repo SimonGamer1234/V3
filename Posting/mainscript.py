@@ -248,7 +248,7 @@ def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the C
                 "description": f"{PostsLeft} posts left",
                 "color": int("66107A", 16)
             }
-        ]
+        ]}
     url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
     r = requests.post(url, headers=headers, json=data)
     print(r.status_code, r.text)
