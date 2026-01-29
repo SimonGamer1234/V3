@@ -249,11 +249,9 @@ def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the C
                 "color": int("66107A", 16)
             }
         ]
-        url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
-        r = requests.post(url, headers=headers, json=data)
-        print(r.status_code, r.text)
-        message_id = r.json()["id"]
-        Ad_JSON["ReportMessageID"] = message_id
+    url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
+    r = requests.post(url, headers=headers, json=data)
+    print(r.status_code, r.text)
     return Ad_JSON
 
 def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts): # Edits the amount of postings left
@@ -377,8 +375,7 @@ def main():
     elif BaseVariable_Status == False:
         ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
         Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
-        Ad_Json = Report_Customer(Message_JSON, succesful_posts) # Sends a report to the customer
-        Cathegories_data[Cathegory_Place]["Ads"][AdNumber] = Ad_Json
+        Ad_Json = Report_Customer(Message_JSON, succesful_posts) # Sends a report to the 
         Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts) # Edits the amount
         Report_Message_Gist_PATCH_1 = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
         Report_Message_Gist_PATCH_2 = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
