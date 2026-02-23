@@ -376,7 +376,7 @@ def main():
             tracker_data_new["base_variables"][cathegory_index][cathegory_name] = 0
             ad_json = pick_base_var(base_vars_data,cathegory_name) # Picks a BASE variable Ad
 
-            errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_username) # Posts the Ad
+            errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_username, True) # Posts the Ad
             report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles andy posting
             report_message_gist_PATCH_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
             
@@ -386,7 +386,7 @@ def main():
         print(f"{report_message_system}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker, report_message_gist_GET_basevar}\n{report_message_gist_PATCH_tracker}\n{report_message_notion_PATCH_posts}")
 
     elif base_var_status == False:
-        errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index) # Posts the Ad
+        errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index, False) # Posts the Ad
         report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
         report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
         cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
