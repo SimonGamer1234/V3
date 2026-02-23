@@ -365,7 +365,7 @@ def main():
 
     account_token, account_username = choose_accounts(accounts_data, cathegory_name, account_index) # Picks the account token and name
     
-    ad_json, ad_index, base_var_status, ad_keywords = pick_ad(cathegory_json, ad_index) # Picks the Ad to post
+    ad_json, base_var_status, ad_keywords = pick_ad(cathegory_json, ad_index) # Picks the Ad to post
 
     base_vars_data,report_message_gist_GET_basevar = get_gist(Server_ads_gist_ID)
 
