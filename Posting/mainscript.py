@@ -43,7 +43,6 @@ def get_gist(gist_ID):
         content = json.loads(next(iter(gist["files"].values()))["content"])
         
         name = next(iter(gist["files"].values()))["filename"]
-        print(name, content, message)
         return content,message
     else:
         message = f"Failed to fetch gist. Status code: {response.status_code}"
@@ -74,7 +73,6 @@ def get_data(cathegories_data, tracker_data): # Chooses in which servers it will
     base_var_post = False
     cathegories = tracker_data["cathegories"]
     cathegory_index = tracker_data["cathegory_index"]
-    print(f"Cathegory Number: {cathegory_index}")
 
     cathegory_json = cathegories_data[cathegory_index]
     cathegory = cathegories[cathegory_index]
@@ -111,15 +109,12 @@ def choose_accounts(accounts_data, cathegory_name, account_index): # Uses the Ca
                 account_token = account["token"]
                 account_username = account["Name"]
                 return account_token, account_username # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
-    
-    print("Error: Account not found")
     return None, None
             
 
 def pick_ad(cathegory_json, ad_index): # Uses the AdNumber in tracker.json to pick the ad from the list of ads in the Cathegory's json
     ads = cathegory_json["ads"]
     ad_json = ads[ad_index]
-    print(f"Message_JSON\n{ad_json}")
     ad_keywords = ad_json["keywords"]
     base_var_status = ad_json["plan"]
 
@@ -136,18 +131,14 @@ def get_forum_tags(account_token, channel_id):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json()
-        print(json.dumps(data, indent=4))
         ids = []
         tags = data.get("available_tags", [])
         if not tags:
-            print("No tags found or this is not a Forum channel.")
             return []
         for tag in tags:
             ids.append(tag["id"])
         return ids
     else:
-        print(f"Failed to fetch channel. Status: {response.status_code}")
-        print(response.text)
         return None
     
 def post_message(cathegory_json, account_token, ad_json, cathegory_name, account_username, base_var_status): # Posts the ads in the channels 
@@ -209,7 +200,6 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
             unauthorized = True
         elif status_code == 400:
             bad_reqeust = True
-    print(f"DETAILED ERROR LOG:, {errors_log}\n\n")
     if unauthorized == True:
         errors_log = f"Unauthorized {cathegory_name} | {account_username} <@1148657062599983237>"
     # if BadRequest == True:
@@ -284,18 +274,14 @@ def update_posts_left(cathegories_data, cathegory_json, cathegory_index, ad_inde
     notion_status_codes = None
     for ad,index in enumerate(ads):
         if ad["keywords"] == ad_keywords:
-            print("Found the ad to update postings left", ad)
             old_posts_left = ads[index]["posts_left"]
             new_posts_left = old_posts_left - succesful_posts
         
             cathegories_data[cathegory_index]["ads"][index]["posts_left"] = new_posts_left
-            print(f"Changing postings from {old_posts_left} to {new_posts_left}")
             if new_posts_left <= 0:
-                print("Posting is finished. Replacing with base variable.....")
                 cathegory_name = cathegories_data[cathegory_index]["cathegory"]
                 cathegories_data[cathegory_index]["Ads"][index] = pick_base_var(base_vars_data,cathegory_name)
                 notion_status_codes = update_notion([ad_index], "_________", cathegory_name) # Updates Notion
-                print(f"Base variable:\n\n{cathegory_name}")
                 
 
     return cathegories_data, notion_status_codes
@@ -323,8 +309,6 @@ def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
     else:
         NOTION_DATABASE_ID = "2d90bcea8f4080d9a67fd07874bbcb61"
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
-    print(url)
-    print(NOTION_DATABASE_ID_LIST, NOTION_DATABASE_ID)
     headers = {'Authorization': 'Bearer ' + NOTION_API_KEY,'Content-Type': 'application/json','Notion-Version': '2022-06-28',}
     data = {
     "sorts": [{
@@ -334,7 +318,6 @@ def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
     }
     response = requests.post(url, headers=headers, json=data)
     if response.status_code == 200:
-        print("Got database info succesfully notion")
         data = response.json()
         results = data["results"]
         status_codes = []
