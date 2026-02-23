@@ -118,10 +118,10 @@ def pick_ad(cathegory_json, ad_index): # Uses the AdNumber in tracker.json to pi
     ad_keywords = ad_json["keywords"]
     base_var_status = ad_json["plan"]
 
-    if BaseVariable_Status == "BASE":
-        BaseVariable_Status = True
+    if base_var_status == "BASE":
+        base_var_status = True
     else:
-        BaseVariable_Status = False
+        base_var_status = False
 
     return ad_json, base_var_status, ad_keywords # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
