@@ -107,7 +107,7 @@ def choose_accounts(accounts_data, cathegory_name, account_index): # Uses the Ca
         if cathegory_name in cathegory:
             if account["account_index"] == account_index:
                 account_token = account["token"]
-                account_username = account["Name"]
+                account_username = account["name"]
                 return account_token, account_username # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
     return None, None
             
