@@ -89,7 +89,7 @@ def get_data(cathegories_data, tracker_data): # Chooses in which servers it will
         tracker_data["cathegory_index"] = 0
     else:
         tracker_data["cathegory_index"] = cathegory_index + 1
-    if ad_index + 1 == len(cathegory_json["Ads"]):
+    if ad_index + 1 == len(cathegory_json["ads"]):
         tracker_data["cathegories"][cathegory_index]["ad_index"] = 0
     else:
         tracker_data["cathegories"][cathegory_index]["ad_index"] = ad_index + 1
@@ -280,7 +280,7 @@ def update_posts_left(cathegories_data, cathegory_json, cathegory_index, ad_inde
             cathegories_data[cathegory_index]["ads"][index]["posts_left"] = new_posts_left
             if new_posts_left <= 0:
                 cathegory_name = cathegories_data[cathegory_index]["cathegory"]
-                cathegories_data[cathegory_index]["Ads"][index] = pick_base_var(base_vars_data,cathegory_name)
+                cathegories_data[cathegory_index]["ads"][index] = pick_base_var(base_vars_data,cathegory_name)
                 notion_status_codes = update_notion([ad_index], "_________", cathegory_name) # Updates Notion
                 
 
@@ -390,7 +390,7 @@ def main():
         report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
         report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
         cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
-        report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "Cathegories.json")
+        report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "cathegories.json")
         teport_message_gist_GET_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
         print(f"{report_message_system, report_message_system_customer}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker}\n {report_message_notion_PATCH_posts,report_message_notion_PATCH_tracker}")
 
