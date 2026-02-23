@@ -151,14 +151,14 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
     urls_json = cathegory_json["urls"] # Gets the IDs of the channels using the JSON
     for url_json in urls_json:
         time.sleep(random.randint(3,5))
-        channel_info = urls_json["channel"]
+        channel_info = url_json["channel"]
         channel_id = channel_info["id"]
         channel_type = channel_info["type"]
         channel_name = channel_info["name"]
         channel_id = channel_info["id"]
         channel_post_base_var = channel_info["post_base_var"]
 
-        guild_info = urls_json["guild"]
+        guild_info = url_json["guild"]
         guild_name = guild_info["name"]
         guild_id = guild_info["id"]
 
