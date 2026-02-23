@@ -400,7 +400,7 @@ def main():
         else:
             report_message_system = report_system(cathegory_name, account_username,skipping=True)
             report_message_gist_PATCH_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
-        print(f"{report_message_system}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker, report_message_gist_GET_basevar}\n{report_message_gist_PATCH_tracker}\n{report_message_notion_PATCH_tracker}")
+        print(f"{report_message_system}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker, report_message_gist_GET_basevar}\n{report_message_gist_PATCH_tracker}\n{report_message_notion_PATCH_posts}")
 
     elif base_var_status == False:
         errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index) # Posts the Ad
