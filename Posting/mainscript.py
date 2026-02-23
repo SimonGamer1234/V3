@@ -22,15 +22,15 @@ NOTION_DATABASE_ID_LIST = os.getenv("NOTION_DATABASE_ID_LIST").split(",")
 
 TrackerFile = "Posting/tracker.json"
 
-Accounts_data = ACCOUNTS
-PostingChanenelID = 1429473972096995370
-PostingCheck = 1459189420635848714
+accounts_data = ACCOUNTS
+system_report_channel_id = 1429473972096995370
+system_posting_check_channel_id = 1459189420635848714
 
 Cathegories_gist_ID = GIST_IDS[1]
 Tracker_gist_ID = GIST_IDS[0]
 Server_ads_gist_ID = GIST_IDS[2]
 
-def Get_Gist(gist_ID):
+def get_gist(gist_ID):
     url = f"https://api.github.com/gists/{gist_ID}"
     headers = {
         'Authorization': 'Bearer ' + GITHUB_TOKEN,
@@ -44,13 +44,13 @@ def Get_Gist(gist_ID):
         
         name = next(iter(gist["files"].values()))["filename"]
         print(name, content, message)
-        return content,name, message
+        return content,message
     else:
         message = f"Failed to fetch gist. Status code: {response.status_code}"
-        return None,None, message
+        return None,message
     
 
-def Update_Gist(gist_id, data, file_name):
+def update_gist(gist_id, data, file_name):
     url = f"https://api.github.com/gists/{gist_id}"
     headers = {
         'Authorization': 'Bearer ' + GITHUB_TOKEN,
@@ -70,248 +70,262 @@ def Update_Gist(gist_id, data, file_name):
         message = f"Failed to update gist. Status code: {response.status_code}"
     return message
 
-def Get_Data(Cathegories_data, Tracker_data): # Chooses in which servers it will post with which account
-    Base_Variable_Check = False
-    Accounts = Tracker_data["Accounts"]
-    if Tracker_data["Test"] == True:
-        Cathegory_NAME = "Test"
-        Cathegory_Place = 4
-        Cathegory_JSON = Cathegories_data[Cathegory_Place]
-        Plan = Accounts[Cathegory_Place]
-        AccountNumber = Plan["AccountNumber"]
-        AdNumber = Plan["AdNumber"]
-        if AdNumber == 2:
-            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = 0
-        else:
-            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = AdNumber + 1
-        if AccountNumber == 2:
-            Tracker_data["Accounts"][4]["AccountNumber"] = 1
-        else:
-            Tracker_data["Accounts"][4]["AccountNumber"] = AccountNumber + 1
+def get_data(cathegories_data, tracker_data): # Chooses in which servers it will post with which account
+    base_var_post = False
+    cathegories = tracker_data["cathegories"]
+    cathegory_index = tracker_data["cathegory_index"]
+    print(f"Cathegory Number: {cathegory_index}")
+
+    cathegory_json = cathegories_data[cathegory_index]
+    cathegory = cathegories[cathegory_index]
+    cathegory_name = cathegories[cathegory_index]["cathegory"]
+    account_index = cathegory["account_index"]
+    ad_index = cathegory["ad_index"]
+
+    base_var_tracker = tracker_data["base_variables"][cathegory_index][cathegory_name]
+    if base_var_tracker == 2:
+        base_var_post = True
     else:
-        Cathegory_Place = Tracker_data["Number"]
-        print(f"Cathegory Number: {Cathegory_Place}")
-
-        Cathegory_JSON = Cathegories_data[Cathegory_Place]
-        Plan = Accounts[Cathegory_Place]
-        Cathegory_NAME = Cathegories_data[Cathegory_Place]["Cathegory"]
-        AccountNumber = Plan["AccountNumber"]
-        AdNumber = Plan["AdNumber"]
-        Base_Variable_Tracker = Tracker_data["Base-Variables"][Cathegory_Place][Cathegory_NAME]
-        if Base_Variable_Tracker == 2:
-            Base_Variable_Check = True
-        else:
-            Tracker_data["Base-Variables"][Cathegory_Place][Cathegory_NAME] = Base_Variable_Tracker + 1
-        if Cathegory_Place == 3:
-            Tracker_data["Number"] = 0
-        else:
-            Tracker_data["Number"] = Cathegory_Place + 1
-        if AdNumber + 1 == len(Cathegory_JSON["Ads"]):
-            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = 0
-        else:
-            Tracker_data["Accounts"][Cathegory_Place]["AdNumber"] = AdNumber + 1
-        if AccountNumber == 4: 
-            Plan["AccountNumber"] = 1
-        else:
-            Plan["AccountNumber"] = AccountNumber + 1
-        Tracker_data["Accounts"][Cathegory_Place] = Plan
+        tracker_data["base_variables"][cathegory_index][cathegory_name] = base_var_tracker + 1
+    if cathegory_index == 3:
+        tracker_data["cathegory_index"] = 0
+    else:
+        tracker_data["cathegory_index"] = cathegory_index + 1
+    if ad_index + 1 == len(cathegory_json["Ads"]):
+        tracker_data["cathegories"][cathegory_index]["ad_index"] = 0
+    else:
+        tracker_data["cathegories"][cathegory_index]["ad_index"] = ad_index + 1
+    if account_index == 4: 
+        cathegory["account_index"] = 1
+    else:
+        cathegory["account_index"] = account_index + 1
+    tracker_data["cathegories"][cathegory_index] = cathegory
     
-    return AdNumber,Cathegory_NAME, Cathegory_JSON, Cathegory_Place, AccountNumber,Tracker_data, Base_Variable_Check # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
+    return ad_index,cathegory_name, cathegory_json, cathegory_index, account_index,tracker_data, base_var_post # Returns the NAME and the PLACE of the Cathegory and the NUMBER of the account in the account list.
 
-def Choose_Accounts(Accounts_data, Cathegory_NAME, AccountNumber): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
-    for account in Accounts_data:
-        cathegory = account["Cathegory"]
-        if Cathegory_NAME in cathegory:
-            if account["AccountNumber"] == AccountNumber:
-                AccountToken = account["Token"]
-                AccountName = account["Name"]
-                return AccountToken, AccountName # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
+def choose_accounts(accounts_data, cathegory_name, account_index): # Uses the Cathegory name to find the right accounts, chooses one according to the AccountNumber
+    for account in accounts_data:
+        cathegory = account["cathegory"]
+        if cathegory_name in cathegory:
+            if account["account_index"] == account_index:
+                account_token = account["token"]
+                account_username = account["Name"]
+                return account_token, account_username # Returns the TOKEN and the USERNAME of the account - !maybe change to ID later!
     
     print("Error: Account not found")
     return None, None
             
 
-def Pick_Ad(Cathegory_JSON, AdNumber): # Uses the AdNumber in tracker.json to pick the ad from the list of ads in the Cathegory's json
-    Ads = Cathegory_JSON["Ads"]
-    Ad = Ads[AdNumber]
-    print(f"Message_JSON\n{Ad}")
-    Message_Keyword = Ad["Keywords"]
-    BaseVariable_Status = Ad["Plan"]
+def pick_ad(cathegory_json, ad_index): # Uses the AdNumber in tracker.json to pick the ad from the list of ads in the Cathegory's json
+    ads = cathegory_json["ads"]
+    ad_json = ads[ad_index]
+    print(f"Message_JSON\n{ad_json}")
+    ad_keywords = ad_json["keywords"]
+    base_var_status = ad_json["plan"]
 
     if BaseVariable_Status == "BASE":
         BaseVariable_Status = True
     else:
         BaseVariable_Status = False
 
-    return Ad, AdNumber, BaseVariable_Status, Message_Keyword # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
+    return ad_json, base_var_status, ad_keywords # Returns the Ad json (1), AdNumber (2), BaseVariable_Status (3) 
 
-def Post_Message(Cathegory_JSON, AccountToken, Ad_JSON, Account_Cathegory, Account_Number): # Posts the ads in the channels 
+def get_forum_tags(account_token, channel_id):
+    url = f"https://discord.com/api/v10/channels/{channel_id}"
+    headers = {"Authorization": account_token}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        print(json.dumps(data, indent=4))
+        ids = []
+        tags = data.get("available_tags", [])
+        if not tags:
+            print("No tags found or this is not a Forum channel.")
+            return []
+        for tag in tags:
+            ids.append(tag["id"])
+        return ids
+    else:
+        print(f"Failed to fetch channel. Status: {response.status_code}")
+        print(response.text)
+        return None
+    
+def post_message(cathegory_json, account_token, ad_json, cathegory_name, account_username, base_var_status): # Posts the ads in the channels 
     succesful_posts = 0
-    BadRequest = False
-    Unauthorized = False
-    ErrorLog = []
-    Content = Ad_JSON["Content"]
-    URLs_JSON = Cathegory_JSON["URLs"] # Gets the IDs of the channels using the JSON
-    for json in URLs_JSON:
+    bad_reqeust = False
+    unauthorized = False
+    errors_log = []
+    ad_content = ad_json["content"]
+    ad_keywords = ad_json["keywords"]
+    urls_json = cathegory_json["urls"] # Gets the IDs of the channels using the JSON
+    for url_json in urls_json:
         time.sleep(random.randint(3,5))
-        channel_info = json["channel"]
-        guild_info = json["guild"]
+        channel_info = urls_json["channel"]
         channel_id = channel_info["id"]
-        URL = f"https://discord.com/api/channels/{channel_id}/messages"
-        headers = {
-            "Authorization": AccountToken,
-            "Content-Type": "application/json"
-        }
-        params = {
-            "content": Content,
-        }
-        response = requests.post(URL, headers=headers, json=params) # Posts the Ad in all of the channels using Token
+        channel_type = channel_info["type"]
+        channel_name = channel_info["name"]
+        channel_id = channel_info["id"]
+        channel_post_base_var = channel_info["post_base_var"]
+
+        guild_info = urls_json["guild"]
+        guild_name = guild_info["name"]
+        guild_id = guild_info["id"]
+
+        if base_var_status == True:
+            if channel_post_base_var == False:
+                continue
+
+        if channel_type == "forum":
+            tag_ids = get_forum_tags(account_token, channel_id)
+            url = f"https://discord.com/api/v10/channels/{channel_id}/threads"
+            headers = {"Authorization": account_token,"Content-Type": "application/json"}
+            payload = {
+                "name": ad_keywords,
+                "message": {"content": ad_content},
+                "type": 11, 
+                "applied_tags": tag_ids[:4],
+                "auto_archive_duration": 1440 
+            }
+            response = requests.post(url, headers=headers, json=payload)
+
+        if channel_type == "text":
+            url = f"https://discord.com/api/channels/{channel_id}/messages"
+            headers = {"Authorization": account_token,"Content-Type": "application/json"}
+            params = {"content": ad_content,}
+            response = requests.post(url, headers=headers, json=params) # Posts the Ad in all of the channels using Token
 
         status_code = response.status_code
         if status_code != 200:
-            message_JSON = {
-                "guild-name": guild_info["name"],
-                "guild-id": guild_info["id"],
-                "channel-name": channel_info["name"],
-                "channel-id": channel_info["id"],
-                "status-code": status_code
-                            }
-            ErrorLog.append(message_JSON)
+            errors_log.append({
+                "guild_name": guild_name,
+                "guild_id": guild_id["id"],
+                "channel_name": channel_name["name"],
+                "channel_id": channel_id["id"],
+                "status_code": status_code
+                            })
         else: 
             succesful_posts += 1 
         if status_code == 401:
-            Unauthorized = True
+            unauthorized = True
         elif status_code == 400:
-            BadRequest = True
-    print(f"DETAILED ERROR LOG:, {ErrorLog}\n\n")
-    if Unauthorized == True:
-        ErrorLog = f"Unauthorized {Account_Cathegory} | {Account_Number} <@1148657062599983237>"
+            bad_reqeust = True
+    print(f"DETAILED ERROR LOG:, {errors_log}\n\n")
+    if unauthorized == True:
+        errors_log = f"Unauthorized {cathegory_name} | {account_username} <@1148657062599983237>"
     # if BadRequest == True:
     #     ErrorLog = f"Bad Request {Account_Cathegory} | {Account_Number}"
-    return ErrorLog, succesful_posts # Returns a JSON of all the Errors (Status code not 200)
+    return errors_log, succesful_posts # Returns a JSON of all the Errors (Status code not 200)
  
-def Report_System(ServerCathegory, AccountName, ErrorLog=None, Ad=None, Skipping=False): # Posts a message to the main report channel
-    if Skipping == True:
-        Content = f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\nIt wasnt 6 hours yet - **skipping posting**"
+def report_system(cathegory_name, account_username, errors_log=None, ad_json=None, skipping=False): # Posts a message to the main report channel
+    if skipping == True:
+        content = f"**{cathegory_name}** | Cathegory\n**{account_username}** | Account\n\nIt wasnt 6 hours yet - **skipping posting**"
     else:
-        if len(ErrorLog) > 0:
-            if isinstance(ErrorLog, str):
-                Content = ErrorLog
+        if len(errors_log) > 0:
+            if isinstance(errors_log, str):
+                content = errors_log
             else:
-                NewErrorLog = ""
+                formatted_errors_log = ""
                 number = 1
-                for error in ErrorLog:
-                    guild_name = error["guild-name"]
-                    guild_id = error["guild-id"]
-                    channel_name = error["channel-name"]
-                    channel_id = error["channel-id"]
-                    status_code = error["status-code"]
+                for error_json in errors_log:
+                    guild_name = error_json["guild_name"]
+                    guild_id = error_json["guild_id"]
+                    channel_name = error_json["channel_name"]
+                    channel_id = error_json["channel_id"]
+                    status_code = error_json["status_code"]
                     description = f"{number}.  **{status_code}** | {guild_name} ({guild_id})\n-# Channel: {channel_name} ({channel_id})"
-                    NewErrorLog = f"{NewErrorLog}\n{description}"
+                    formatted_errors_log = f"{formatted_errors_log}\n{description}"
                     number += 1
-                Content = (f"**{ServerCathegory}** | Cathegory\n**{AccountName}** | Account\n\n**Errors:**\n{NewErrorLog}\nAd Content:\n\n`{Ad['Content'][:200]}`")
+                content = (f"**{cathegory_name}** | Cathegory\n**{account_username}** | Account\n\n**Errors:**\n{formatted_errors_log}\nAd Content:\n\n`{ad_json['content'][:200]}`")
         else:
-            Content = ("All Ads posted successfully.")
-    PostingChannelURL = f"https://discord.com/api/channels/{PostingChanenelID}/messages"
-    Headers = {
-        "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
-        "Content-Type": "application/json"
-    }
-    Content = {"content": Content}
-    response = requests.post(PostingChannelURL, headers=Headers, json=Content)
-    if Ad != None:
-        PostingCheckURL = f"https://discord.com/api/channels/{PostingCheck}/messages"
-        Content = {"content":Ad["Content"]}
-        requests.post(PostingCheckURL, headers=Headers, json=Content)
-    if response.status_code == 200:
-        message = "Posting report sent successfully."
-    else:
-        message = f"Failed to send posting report. Text: {response.text}"
-    return message
-
-def Report_Customer(Ad_JSON, succesful_posts): # Sends a Report message to the Customer
-    AdContent = Ad_JSON["Content"]
-    AdPlan = Ad_JSON["Plan"]
-    PostsLeft = Ad_JSON["PostsLeft"]-succesful_posts # Gets all the info from the JSON
-    TicketID = Ad_JSON["TicketID"]
-    Keywords = Ad_JSON["Keywords"]
-    ReportMessageID = Ad_JSON.get("ReportMessageID")
+            content = ("All Ads posted successfully.")
+    url = f"https://discord.com/api/channels/{system_report_channel_id}/messages"
     headers = {
         "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
         "Content-Type": "application/json"
     }
+    content = {"content": content}
+    response = requests.post(system_report_channel_id, headers=headers, json=content)
+    if ad_json != None:
+        url = f"https://discord.com/api/channels/{system_posting_check_channel_id}/messages"
+        content = {"content":ad_json["content"]}
+        requests.post(url, headers=headers, json=content)
+    if response.status_code == 200:
+        message = "System report sent successfully."
+    else:
+        message = f"Failed to send system posting report. Text: {response.text}"
+    return message
 
+def report_customer(ad_json, succesful_posts): # Sends a Report message to the Customer
+    ad_contet = ad_json["content"]
+    ad_plan = ad_json["plan"]
+    ad_posts_left = ad_json["posts_left"]-succesful_posts # Gets all the info from the JSON
+    ad_ticket_id = ad_json["ticket_id"]
+    ad_keywords = ad_json["keywords"]
+    headers = {"Authorization": f"Bot {DISCORD_BOT_TOKEN}","Content-Type": "application/json"}
     data = {
         "embeds": [
             {
-                "title": f"{Keywords} | {AdPlan}",
-                "description": f"{PostsLeft} posts left",
+                "title": f"{ad_keywords} | {ad_plan}",
+                "description": f"{ad_posts_left} posts left",
                 "color": int("66107A", 16)
             }
         ]
     }
-    if ReportMessageID == None:
-        url = f"https://discord.com/api/v10/channels/{TicketID}/messages"
-        r = requests.post(url, headers=headers, json=data)
-        print(r.status_code, r.text)
-        message_id = r.json()["id"]
-        Ad_JSON["ReportMessageID"] = message_id
+    url = f"https://discord.com/api/v10/channels/{ad_ticket_id}/messages"
+    r = requests.post(url, headers=headers, json=data)
+    if r.status_code == 200:
+        message = "Customer report sent successfully."
     else:
-        edit_url = f"https://discord.com/api/v10/channels/{TicketID}/messages/{message_id}"
-        r = requests.patch(edit_url, headers=headers, json=data)
-        print(r.status_code, r.text)
-    return Ad_JSON
+        message = f"Failed to send customer posting report. Text: {r.text}"
+    return message
 
-def Update_Postings(Cathegories, Ad_PLACE,Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts): # Edits the amount of postings left
-    print(Cathegory_Place, Ad_PLACE)
-    ads = Cathegories[Cathegory_Place]["Ads"]
-    status_codes = None
-    for ad in ads:
-        if ad["Keywords"] == Message_Keyword:
+def update_posts_left(cathegories_data, cathegory_json, cathegory_index, ad_index, ad_keywords, base_vars_data, succesful_posts): # Edits the amount of postings left
+    ads = cathegory_json["ads"]
+    notion_status_codes = None
+    for ad,index in enumerate(ads):
+        if ad["keywords"] == ad_keywords:
             print("Found the ad to update postings left", ad)
-            index = ads.index(ad)
-            Old_Posts = Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostsLeft"]
-            New_Postings = Old_Posts - succesful_posts
-            Cathegories[Cathegory_Place]["Ads"][ads.index(ad)]["PostsLeft"] = New_Postings
-            print(f"Changing postings from {Old_Posts} to {New_Postings}")
-            if New_Postings <= 0:
+            old_posts_left = ads[index]["posts_left"]
+            new_posts_left = old_posts_left - succesful_posts
+        
+            cathegories_data[cathegory_index]["ads"][index]["posts_left"] = new_posts_left
+            print(f"Changing postings from {old_posts_left} to {new_posts_left}")
+            if new_posts_left <= 0:
                 print("Posting is finished. Replacing with base variable.....")
-                Cathegories[Cathegory_Place]["Ads"][ads.index(ad)] = Pick_BaseVariable(Server_ads_data,Cathegories[Cathegory_Place]["Cathegory"])
-                print(f"Base variable:\n\n{Cathegories[Cathegory_Place]["Ads"][index]}")
-                status_codes = Update_Notion([Ad_PLACE], "_________", Cathegories[Cathegory_Place]["Cathegory"]) # Updates Notion
+                cathegory_name = cathegories_data[cathegory_index]["cathegory"]
+                cathegories_data[cathegory_index]["Ads"][index] = pick_base_var(base_vars_data,cathegory_name)
+                notion_status_codes = update_notion([ad_index], "_________", cathegory_name) # Updates Notion
+                print(f"Base variable:\n\n{cathegory_name}")
+                
 
-    return Cathegories, status_codes
+    return cathegories_data, notion_status_codes
 
-def Track_Posting(ad_number, cathegory_place ,cathegories_json):
-    new_number = ad_number + 1
-    if new_number > 11:
-        new_number = 0
-    new_keywords = cathegories_json["Ads"][new_number]["Keywords"]
-    old_keywords = cathegories_json["Ads"][ad_number]["Keywords"]
-    cathegory = cathegories_json["Cathegory"]
-    Update_Notion([ad_number], old_keywords, cathegory)
-    return Update_Notion([new_number], f"{new_keywords} 🟢", cathegory)
+def track_posting(ad_index, cathegory_place ,cathegories_json):
+    new_index = ad_index + 1
+    if new_index > 11:
+        new_index = 0
+    new_keywords = cathegories_json["ads"][new_index]["keywords"]
+    old_keywords = cathegories_json["ads"][ad_index]["keywords"]
+    cathegory_name = cathegories_json["cathegory"]
+    update_notion([ad_index], old_keywords, cathegory_name)
+    return update_notion([new_index], f"{new_keywords} 🟢", cathegory_name)
         
 
-def Update_Notion(WhichVariables, Keywords, Cathegory):
-    if Cathegory == "RoTech":
+def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
+    if cathegory_name == "RoTech":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[0].strip()
-    elif Cathegory == "Aviation":
+    elif cathegory_name == "Aviation":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[1].strip()
-    elif Cathegory == "Advertising":
+    elif cathegory_name == "Advertising":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[2].strip()
-    elif Cathegory == "Gaming":
+    elif cathegory_name == "Gaming":
         NOTION_DATABASE_ID = NOTION_DATABASE_ID_LIST[3].strip()
     else:
         NOTION_DATABASE_ID = "2d90bcea8f4080d9a67fd07874bbcb61"
     url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
     print(url)
     print(NOTION_DATABASE_ID_LIST, NOTION_DATABASE_ID)
-    headers = {
-            'Authorization': 'Bearer ' + NOTION_API_KEY,
-            'Content-Type': 'application/json',
-            'Notion-Version': '2022-06-28',
-        }
+    headers = {'Authorization': 'Bearer ' + NOTION_API_KEY,'Content-Type': 'application/json','Notion-Version': '2022-06-28',}
     data = {
     "sorts": [{
         "property": "Name",
@@ -324,10 +338,10 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
         data = response.json()
         results = data["results"]
         status_codes = []
-        for variable in WhichVariables:
-            page = results[variable]
+        for ad_index in ad_indexes_to_update:
+            page = results[ad_index]
             page_id = page["id"]
-            new_name = f"{variable+1} | {Keywords}"
+            new_name = f"{ad_index+1} | {ad_keyword}"
 
             url = f"https://api.notion.com/v1/pages/{page_id}"
             headers = {
@@ -353,45 +367,52 @@ def Update_Notion(WhichVariables, Keywords, Cathegory):
     else:
         print(response.text)
 
-def Pick_BaseVariable(Server_ads_data,Cathegory_Name):
-    for variable in Server_ads_data:
-            Cathegory = variable["Cathegory"]
-            if Cathegory_Name == Cathegory:
-                index = Server_ads_data.index(variable)     
-                BaseVariable_Json = Server_ads_data[index]["Ads"][random.randint(0, len(variable["Ads"])-1)]
-                return BaseVariable_Json
+def pick_base_var(base_vars_data,cathegory_name):
+    for base_var_cathegory_json, index in enumerate(base_vars_data):
+            base_var_cathegory_name = base_var_cathegory_json["cathegory"]
+            if cathegory_name == base_var_cathegory_name:
+                base_var_json = base_vars_data[index]["ads"][random.randint(0, len(base_var_cathegory_json["ads"])-1)]
+                return base_var_json
 def main():
-    Cathegories_data, Cathegories_file_name, Report_Message_Gist_GET_1 = Get_Gist(Cathegories_gist_ID)
-    Tracker_data, Tracker_file_name, Report_Message_Gist_GET_2 = Get_Gist(Tracker_gist_ID)
-    AdNumber, Cathegory_Name, Cathegory_JSON, Cathegory_Place, Account_Number, Tracker_data_New, Base_Variable_Check = Get_Data(Cathegories_data, Tracker_data) # Picks the server and account
-    Account_Token, Account_Name = Choose_Accounts(Accounts_data, Cathegory_Name, Account_Number) # Picks the account token and name
-    Message_JSON, Message_Place, BaseVariable_Status, Message_Keyword = Pick_Ad(Cathegory_JSON, AdNumber) # Picks the Ad to post
-    Server_ads_data, Server_ads_file_name, Report_Message_Gist_GET_3 = Get_Gist(Server_ads_gist_ID)
-    Notion_Tracking_Report = Track_Posting(AdNumber, Cathegory_Place, Cathegory_JSON)
-    if BaseVariable_Status == True: 
-        if Base_Variable_Check == True:
-            Tracker_data_New["Base-Variables"][Cathegory_Place][Cathegory_Name] = 0
-            Message_JSON = Pick_BaseVariable( Server_ads_data,Cathegory_Name) # Picks a BASE variable Ad
-            ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-            Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
-            Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
+    cathegories_data,report_message_gist_GET_cath = get_gist(Cathegories_gist_ID)
+
+    tracker_data, teport_message_gist_GET_tracker = get_gist(Tracker_gist_ID)
+
+    ad_index, cathegory_name, cathegory_json, cathegory_index, account_index, tracker_data_new, base_var_post = get_data(cathegories_data, tracker_data) # Picks the server and account
+
+    account_token, account_username = choose_accounts(accounts_data, cathegory_name, account_index) # Picks the account token and name
+    
+    ad_json, ad_index, base_var_status, ad_keywords = pick_ad(cathegory_json, ad_index) # Picks the Ad to post
+
+    base_vars_data,report_message_gist_GET_basevar = get_gist(Server_ads_gist_ID)
+
+    report_message_notion_PATCH_tracker = track_posting(ad_index, cathegory_index, cathegory_json)
+
+    if base_var_status == True: 
+        if base_var_post == True:
+            tracker_data_new["base_variables"][cathegory_index][cathegory_name] = 0
+            ad_json = pick_base_var(base_vars_data,cathegory_name) # Picks a BASE variable Ad
+
+            errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_username) # Posts the Ad
+            report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles andy posting
+            report_message_gist_PATCH_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
             
         else:
-            Report_Message_System = Report_System(ServerCathegory=Cathegory_Name, AccountName=Account_Name, Skipping=True)
-            Report_Message_Gist_PATCH = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
-        print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1, Report_Message_Gist_GET_2}\n{Report_Message_Gist_PATCH}\n{Notion_Tracking_Report}")
-    elif BaseVariable_Status == False:
-        ErrorLog, succesful_posts = Post_Message(Cathegory_JSON, Account_Token, Message_JSON, Cathegory_Name, Account_Number) # Posts the Ad
-        Report_Message_System = Report_System(Cathegory_Name, Account_Name, ErrorLog=ErrorLog, Ad=Message_JSON) # Handles any posting
-        Ad_Json = Report_Customer(Message_JSON, succesful_posts) # Sends a report to the customer
-        Cathegories_data[Cathegory_Place]["Ads"][AdNumber] = Ad_Json
-        Cathegories, Report_Notion_Update = Update_Postings(Cathegories_data, Message_Place, Cathegory_Place, Message_Keyword, Server_ads_data, succesful_posts) # Edits the amount
-        Report_Message_Gist_PATCH_1 = Update_Gist(Cathegories_gist_ID,Cathegories, "Cathegories.json")
-        Report_Message_Gist_PATCH_2 = Update_Gist(Tracker_gist_ID, Tracker_data_New, "tracker.json")
-        print(f"{Report_Message_System}\n {Report_Message_Gist_GET_1}\n {Report_Message_Gist_GET_2}\n {Report_Notion_Update}\n{Notion_Tracking_Report}")
+            report_message_system = report_system(cathegory_name, account_username,skipping=True)
+            report_message_gist_PATCH_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
+        print(f"{report_message_system}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker, report_message_gist_GET_basevar}\n{report_message_gist_PATCH_tracker}\n{report_message_notion_PATCH_tracker}")
+
+    elif base_var_status == False:
+        errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index) # Posts the Ad
+        report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
+        report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
+        cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
+        report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "Cathegories.json")
+        teport_message_gist_GET_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
+        print(f"{report_message_system, report_message_system_customer}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker}\n {report_message_notion_PATCH_posts,report_message_notion_PATCH_tracker}")
 
     else:
-        print("Something is wrong with base variable status", BaseVariable_Status)
+        print("Something is wrong with base variable status", base_var_status)
     
 main()
 
