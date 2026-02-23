@@ -272,7 +272,7 @@ def report_customer(ad_json, succesful_posts): # Sends a Report message to the C
 def update_posts_left(cathegories_data, cathegory_json, cathegory_index, ad_index, ad_keywords, base_vars_data, succesful_posts): # Edits the amount of postings left
     ads = cathegory_json["ads"]
     notion_status_codes = None
-    for ad,index in enumerate(ads):
+    for index,ad in enumerate(ads):
         if ad["keywords"] == ad_keywords:
             old_posts_left = ads[index]["posts_left"]
             new_posts_left = old_posts_left - succesful_posts
@@ -351,7 +351,7 @@ def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
         print(response.text)
 
 def pick_base_var(base_vars_data,cathegory_name):
-    for base_var_cathegory_json, index in enumerate(base_vars_data):
+    for index,base_var_cathegory_json in enumerate(base_vars_data):
             base_var_cathegory_name = base_var_cathegory_json["cathegory"]
             if cathegory_name == base_var_cathegory_name:
                 base_var_json = base_vars_data[index]["ads"][random.randint(0, len(base_var_cathegory_json["ads"])-1)]
