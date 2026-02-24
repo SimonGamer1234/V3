@@ -234,7 +234,7 @@ def report_system(cathegory_name, account_username, errors_log=None, ad_json=Non
         "Content-Type": "application/json"
     }
     content = {"content": content}
-    response = requests.post(system_report_channel_id, headers=headers, json=content)
+    response = requests.post(url, headers=headers, json=content)
     if ad_json != None:
         url = f"https://discord.com/api/channels/{system_posting_check_channel_id}/messages"
         content = {"content":ad_json["content"]}
