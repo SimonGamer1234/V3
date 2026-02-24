@@ -135,8 +135,8 @@ def handle_data(CATHEGORIES, Content, Plan, TimeSpan, TicketID, Keywords, WhichV
         number = -1
         for cathegory in CATHEGORIES:
             number += 1
-            if cathegory["Cathegory"] == Cathegory:
-                CATHEGORIES[number]["Ads"][int(WhichVariable)-1] = Message
+            if cathegory["cathegory"] == Cathegory:
+                CATHEGORIES[number]["ads"][int(WhichVariable)-1] = Message
     return CATHEGORIES, Keywords, WhichVariables, Cathegory
 
 
@@ -233,11 +233,11 @@ def Remove(Message_Place_List, Cathegory, CATHEGORIES):
         if Cath["Cathegory"] == Cathegory:
             for place in Message_Place_List:
                 Cath["Ads"][int(place)-1] = {
-                    "Content": "",
-                    "Plan": "BASE",
-                    "PostsLeft": "",
-                    "Keywords": "",
-                    "TicketID": "",
+                    "content": "",
+                    "plan": "BASE",
+                    "posts_left": "",
+                    "keywords": "",
+                    "ticket_id": "",
                 }
     return CATHEGORIES
 
