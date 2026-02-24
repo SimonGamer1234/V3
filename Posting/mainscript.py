@@ -164,6 +164,13 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
 
         if base_var_status == True:
             if channel_post_base_var == False:
+                errors_log.append({
+                "guild_name": guild_name,
+                "guild_id": guild_id,
+                "channel_name": channel_name,
+                "channel_id": channel_id,
+                "status_code": "skipping"
+                            })
                 continue
 
         if channel_type == "forum":
