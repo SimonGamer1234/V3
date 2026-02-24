@@ -34,7 +34,7 @@ def Get_Cathegories_From_Gist():
     if response.status_code == 200:
         message = "Gist fetched successfully."
         gist_data = response.json()
-        file_content = gist_data['files']['Cathegories.json']['content']
+        file_content = gist_data['files']['cathegories.json']['content']
         Cathegories = json.loads(file_content)
         return Cathegories, message
     else:
@@ -49,7 +49,7 @@ def Update_Cathegories_Gist(Cathegories):
     }
     data = {
         "files": {
-            "Cathegories.json": {
+            "cathegories.json": {
                 "content": json.dumps(Cathegories, indent=4)
             }
         }
