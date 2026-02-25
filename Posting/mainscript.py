@@ -252,7 +252,7 @@ def report_system(cathegory_name, account_username, errors_log=None, ad_json=Non
         message = f"Failed to send system posting report. Text: {response.text}"
     return message
 
-def report_customer(ad_json, succesful_posts): # Sends a Report message to the Customer
+def report_customer(ad_json, succesful_posts, cathegory_name): # Sends a Report message to the Customer
     ad_contet = ad_json["content"]
     ad_plan = ad_json["plan"]
     ad_posts_left = ad_json["posts_left"]-succesful_posts # Gets all the info from the JSON
@@ -262,7 +262,7 @@ def report_customer(ad_json, succesful_posts): # Sends a Report message to the C
     data = {
         "embeds": [
             {
-                "title": f"{ad_keywords} | {ad_plan}",
+                "title": f"{ad_keywords} | {cathegory_name}",
                 "description": f"{ad_posts_left} posts left",
                 "color": int("66107A", 16)
             }
@@ -395,7 +395,7 @@ def main():
     elif base_var_status == False:
         errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index, False) # Posts the Ad
         report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
-        report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
+        report_message_system_customer = report_customer(ad_json, succesful_posts, cathegory_name) # Sends a report to the customer
         cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
         report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "cathegories.json")
         teport_message_gist_GET_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
