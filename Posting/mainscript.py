@@ -332,7 +332,7 @@ def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
         for ad_index in ad_indexes_to_update:
             page = results[ad_index]
             page_id = page["id"]
-            new_name = f"{ad_index+1} | {ad_keyword}"
+            new_name = f"{ad_index+1} | {cathegory_name}"
 
             url = f"https://api.notion.com/v1/pages/{page_id}"
             headers = {
@@ -396,13 +396,8 @@ def main():
     elif base_var_status == False:
         errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index, False) # Posts the Ad
         report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
-<<<<<<< HEAD
         report_message_system_customer = report_customer(ad_json, succesful_posts, cathegory_name) # Sends a report to the customer
-        cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
-=======
-        report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
         cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data,cathegory_json,cathegory_index, ad_index,ad_keywords, base_vars_data, succesful_posts) # Edits the amount
->>>>>>> f5ba72231260446dba6f27f084d81081debd1956
         report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "cathegories.json")
         teport_message_gist_GET_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
         print(f"{report_message_system, report_message_system_customer}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker}\n {report_message_notion_PATCH_posts,report_message_notion_PATCH_tracker}")
