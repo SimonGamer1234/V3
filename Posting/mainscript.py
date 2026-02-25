@@ -181,9 +181,10 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
                 "name": ad_keywords,
                 "message": {"content": ad_content},
                 "type": 11, 
-                "applied_tags": tag_ids[:4],
                 "auto_archive_duration": 1440 
             }
+            if tag_ids != None:
+                payload["applied_tags"] = tag_ids[:4]
             response = requests.post(url, headers=headers, json=payload)
 
         if channel_type == "text":
@@ -395,8 +396,13 @@ def main():
     elif base_var_status == False:
         errors_log, succesful_posts = post_message(cathegory_json, account_token, ad_json, cathegory_name, account_index, False) # Posts the Ad
         report_message_system = report_system(cathegory_name, account_username, errors_log=errors_log, ad_json=ad_json) # Handles any posting
+<<<<<<< HEAD
         report_message_system_customer = report_customer(ad_json, succesful_posts, cathegory_name) # Sends a report to the customer
         cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data, ad_index, cathegory_index, ad_keywords, base_vars_data, succesful_posts) # Edits the amount
+=======
+        report_message_system_customer = report_customer(ad_json, succesful_posts) # Sends a report to the customer
+        cathegories_data, report_message_notion_PATCH_posts = update_posts_left(cathegories_data,cathegory_json,cathegory_index, ad_index,ad_keywords, base_vars_data, succesful_posts) # Edits the amount
+>>>>>>> f5ba72231260446dba6f27f084d81081debd1956
         report_message_gist_GET_cath = update_gist(Cathegories_gist_ID,cathegories_data, "cathegories.json")
         teport_message_gist_GET_tracker = update_gist(Tracker_gist_ID, tracker_data_new, "tracker.json")
         print(f"{report_message_system, report_message_system_customer}\n {report_message_gist_GET_cath, teport_message_gist_GET_tracker}\n {report_message_notion_PATCH_posts,report_message_notion_PATCH_tracker}")
