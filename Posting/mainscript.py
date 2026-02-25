@@ -181,9 +181,10 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
                 "name": ad_keywords,
                 "message": {"content": ad_content},
                 "type": 11, 
-                "applied_tags": tag_ids[:4],
                 "auto_archive_duration": 1440 
             }
+            if tag_ids != None:
+                payload["applied_tags"] = tag_ids[:4]
             response = requests.post(url, headers=headers, json=payload)
 
         if channel_type == "text":
