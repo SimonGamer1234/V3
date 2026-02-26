@@ -161,7 +161,7 @@ def post_message(cathegory_json, account_token, ad_json, cathegory_name, account
         guild_info = url_json["guild"]
         guild_name = guild_info["name"]
         guild_id = guild_info["id"]
-		print(f"BV_status = {base_var_status} CHPBV = {channel_post_base_var}")
+        print(f"BV_status = {base_var_status} CHPBV = {channel_post_base_var}")
         if base_var_status == True:
             if channel_post_base_var == False:
                 print(f"skipping {guild_name}")  
