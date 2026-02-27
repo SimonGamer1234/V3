@@ -332,7 +332,7 @@ def update_notion(ad_indexes_to_update, ad_keyword, cathegory_name):
         for ad_index in ad_indexes_to_update:
             page = results[ad_index]
             page_id = page["id"]
-            new_name = f"{ad_index+1} | {cathegory_name}"
+            new_name = f"{ad_index+1} | {ad_keyword}"
 
             url = f"https://api.notion.com/v1/pages/{page_id}"
             headers = {
