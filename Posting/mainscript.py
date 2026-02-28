@@ -261,11 +261,15 @@ def report_customer(ad_json, succesful_posts, cathegory_name): # Sends a Report 
     ad_ticket_id = ad_json["ticket_id"]
     ad_keywords = ad_json["keywords"]
     headers = {"Authorization": f"Bot {DISCORD_BOT_TOKEN}","Content-Type": "application/json"}
+    if ad_posts_left > 0:
+        description = f"{ad_posts_left} posts left"
+    elif ad_posts_left <= 0:
+        description = "Finished posting <@1148657062599983237>"
     data = {
         "embeds": [
             {
                 "title": f"{ad_keywords} | {cathegory_name}",
-                "description": f"{ad_posts_left} posts left",
+                "description": description,
                 "color": int("66107A", 16)
             }
         ]
